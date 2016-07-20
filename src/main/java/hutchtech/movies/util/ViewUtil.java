@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class ViewUtil {
 	public static String render(Request request, Map<String, Object> model, String templatePath){
+		final Object currentUser = request.session().attribute("currentUser");
+		model.put("currentUser", currentUser);
 		return velocityTemplateEngine().render(new ModelAndView(model, templatePath));
 	}
 

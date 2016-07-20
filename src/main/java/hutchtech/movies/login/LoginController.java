@@ -24,7 +24,6 @@ public class LoginController {
 			model.put("authenticationFailed", true);
 		} else {
 			model.put("authenticationSucceeded", true);
-			model.put("currentUser", request.queryParams("username"));
 			request.session().attribute("currentUser", request.queryParams("username"));
 		}
 
