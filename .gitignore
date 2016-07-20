@@ -1,4 +1,6 @@
 
+.env
+
 *.class
 
 # Package Files #
