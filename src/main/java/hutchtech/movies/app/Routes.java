@@ -1,9 +1,13 @@
 package hutchtech.movies.app;
 
-import hutchtech.movies.login.LoginController;
-import hutchtech.movies.user.UserDao;
+import hutchtech.movies.controller.LoginController;
+import hutchtech.movies.controller.SignupController;
+import hutchtech.movies.da.UserDao;
 import hutchtech.movies.util.Path;
+import hutchtech.movies.util.ViewUtil;
 import org.apache.log4j.Logger;
+
+import java.util.HashMap;
 
 import static spark.Spark.*;
 /**
@@ -19,10 +23,12 @@ public class Routes {
 
 		port(getHerokuAssignedPort());
 
-
-		get("/", (req, res) -> "Hello Scott");
+		get(Path.Web.INDEX, (req, res) -> ViewUtil.render(req, new HashMap<String, Object>(), Path.Template.INDEX));
 		get(Path.Web.LOGIN, LoginController.serveLoginPage);
 		post(Path.Web.LOGIN, LoginController.handleLoginPost);
+		post(Path.Web.LOGOUT, LoginController.handleLogoutPost);
+		get(Path.Web.SIGNUP, SignupController.serveSignupPage);
+		post(Path.Web.SIGNUP, SignupController.handleSignupPost);
 	}
 
 	private static int getHerokuAssignedPort(){

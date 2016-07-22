@@ -1,0 +1,17 @@
+<html>
+<head>
+	<title>Movie Collection</title>
+</head>
+<body>
+
+	#if($notLoggedIn)
+		<h3>Welcome to Movie Collection - Guest</h3>
+	#else
+		<h3>Welcome to Movie Collection - $currentUser</h3>
+	#end
+
+	<form action="logout" method="post">
+		<input type="submit" value="Logout"/>
+	</form>
+</body>
+</html>

@@ -12,7 +12,12 @@ import java.util.Map;
 public class ViewUtil {
 	public static String render(Request request, Map<String, Object> model, String templatePath){
 		final Object currentUser = request.session().attribute("currentUser");
-		model.put("currentUser", currentUser);
+		if (currentUser != null) {
+			model.put("currentUser", currentUser);
+			model.put("notLoggedIn", false);
+		} else {
+			model.put("notLoggedIn", true);
+		}
 		return velocityTemplateEngine().render(new ModelAndView(model, templatePath));
 	}
 

@@ -1,18 +1,22 @@
-package hutchtech.movies.user;
+package hutchtech.movies.domain;
 
 /**
  * Created by Scott Hutchings on 7/20/2016.
  */
 
 public class User {
+
+	private String id;
 	private String username;
 	private String salt;
 	private String hashedPassword;
 
-	public User(String username, String salt, String hashedPassword) {
-		this.username = username;
-		this.salt = salt;
-		this.hashedPassword = hashedPassword;
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUsername() {

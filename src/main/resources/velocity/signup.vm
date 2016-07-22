@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title>Register</title>
+</head>
+<body>
+	<form id="signonForm" method="post">
+		#if (!$signupErrors.isEmpty())
+			<ul>
+			#foreach($error in $signupErrors)
+				<li>$error</li>
+			#end
+			</ul>
+		#end
+		<h1>Register</h1>
+		<label for="username">Username</label>
+		<input id="username" name="username" type="text"/>
+		<label for="password1">Password</label>
+		<input id="password1" name="password" type="password"/>
+		<label for="password2">Confirm Password</label>
+		<input id="password2" name="passwordConf" type="password"/>
+
+		<input type="submit" value="Register"/>
+	</form>
+</body>
+</html>

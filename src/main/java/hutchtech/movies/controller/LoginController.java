@@ -1,6 +1,6 @@
-package hutchtech.movies.login;
+package hutchtech.movies.controller;
 
-import hutchtech.movies.user.UserController;
+import hutchtech.movies.controller.UserController;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
 import spark.*;
@@ -25,8 +25,23 @@ public class LoginController {
 		} else {
 			model.put("authenticationSucceeded", true);
 			request.session().attribute("currentUser", request.queryParams("username"));
+			if (request.session().attribute("loginRedirect") != null) {
+				response.redirect(request.session().attribute("loginRedirect"));
+			}
 		}
-
 		return ViewUtil.render(request, model, Path.Template.LOGIN);
 	};
+
+	public static Route handleLogoutPost = (Request request, Response response) -> {
+		request.session().removeAttribute("currentUser");
+		response.redirect(Path.Web.LOGIN);
+		return null;
+	};
+
+	public static void ensureUserIsLoggedIn (Request request, Response response) {
+		if (request.session().attribute("currentUser") == null){
+			request.session().attribute("loginRedirect", request.pathInfo());
+			response.redirect(Path.Web.LOGIN);
+		}
+	}
 }

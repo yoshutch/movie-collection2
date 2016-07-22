@@ -1,5 +1,6 @@
-package hutchtech.movies.user;
+package hutchtech.movies.controller;
 
+import hutchtech.movies.domain.User;
 import org.mindrot.jbcrypt.BCrypt;
 import static hutchtech.movies.app.Routes.userDao;
 

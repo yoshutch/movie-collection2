@@ -30,6 +30,14 @@
 			<artifactId>jbcrypt</artifactId>
 			<version>0.3m</version>
 		</dependency>
+
+		<!--mongo-->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+
 		<!--logging-->
 		<dependency>
 			<groupId>org.slf4j</groupId>
