@@ -1,8 +1,10 @@
 package hutchtech.movies.app;
 
+import hutchtech.movies.OimdbClient;
 import hutchtech.movies.controller.LoginController;
 import hutchtech.movies.controller.SignupController;
 import hutchtech.movies.da.UserDao;
+import hutchtech.movies.domain.Movie;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
 import org.apache.log4j.Logger;
@@ -23,7 +25,11 @@ public class Routes {
 
 		port(getHerokuAssignedPort());
 
-		get(Path.Web.INDEX, (req, res) -> ViewUtil.render(req, new HashMap<String, Object>(), Path.Template.INDEX));
+		get(Path.Web.INDEX, (req, res) -> {
+			final Movie m = OimdbClient.findMovieByImdbId("tt0088763");
+			LOG.debug(m);
+			return ViewUtil.render(req, new HashMap<String, Object>(), Path.Template.INDEX);
+		});
 		get(Path.Web.LOGIN, LoginController.serveLoginPage);
 		post(Path.Web.LOGIN, LoginController.handleLoginPost);
 		post(Path.Web.LOGOUT, LoginController.handleLogoutPost);
