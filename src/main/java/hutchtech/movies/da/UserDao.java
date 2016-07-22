@@ -20,7 +20,7 @@ public class UserDao {
 
 	public UserDao() {
 
-		MongoClientURI mongoUrl = new MongoClientURI(System.getenv("MONGODB_URL"));
+		MongoClientURI mongoUrl = new MongoClientURI(System.getenv("MONGODB_URI"));
 		mongoClient = new MongoClient(mongoUrl);
 		database = mongoClient.getDatabase(mongoUrl.getDatabase());
 		LOG.debug(database.listCollectionNames().first());
