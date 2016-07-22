@@ -2,12 +2,16 @@ package hutchtech.movies.app;
 
 import hutchtech.movies.OimdbClient;
 import hutchtech.movies.controller.LoginController;
+import hutchtech.movies.controller.MovieController;
 import hutchtech.movies.controller.SignupController;
 import hutchtech.movies.da.UserDao;
 import hutchtech.movies.domain.Movie;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
 import org.apache.log4j.Logger;
+import spark.Filter;
+import spark.Request;
+import spark.Response;
 
 import java.util.HashMap;
 
@@ -35,6 +39,9 @@ public class Routes {
 		post(Path.Web.LOGOUT, LoginController.handleLogoutPost);
 		get(Path.Web.SIGNUP, SignupController.serveSignupPage);
 		post(Path.Web.SIGNUP, SignupController.handleSignupPost);
+		get(Path.Web.COLLECTION, MovieController.myMovieCollection);
+
+		before(Path.Web.COLLECTION, LoginController::ensureUserIsLoggedIn);
 	}
 
 	private static int getHerokuAssignedPort(){

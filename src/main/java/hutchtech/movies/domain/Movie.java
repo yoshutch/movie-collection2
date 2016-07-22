@@ -16,7 +16,7 @@ public class Movie {
 	@JsonProperty("Title")
 	private String title;
 	@JsonProperty("Rated")
-	private String rating;
+	private Rating rating;
 	@JsonProperty("Runtime")
 	private String runtime;
 	@JsonProperty("Poster")
@@ -48,11 +48,11 @@ public class Movie {
 		this.title = title;
 	}
 
-	public String getRating() {
+	public Rating getRating() {
 		return rating;
 	}
 
-	public void setRating(String rating) {
+	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
 

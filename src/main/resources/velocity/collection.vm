@@ -1,0 +1,14 @@
+<html>
+<head>
+	<title>My Movie Collection</title>
+	#parse("util/common-head.vm")
+
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+#parse("util/header.vm")
+
+</body>
+</html>

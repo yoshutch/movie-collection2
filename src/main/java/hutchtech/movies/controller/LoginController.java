@@ -23,10 +23,11 @@ public class LoginController {
 		if (!UserController.authenticate(request.queryParams("username"), request.queryParams("password"))){
 			model.put("authenticationFailed", true);
 		} else {
-			model.put("authenticationSucceeded", true);
 			request.session().attribute("currentUser", request.queryParams("username"));
 			if (request.session().attribute("loginRedirect") != null) {
 				response.redirect(request.session().attribute("loginRedirect"));
+			} else {
+				response.redirect(Path.Web.COLLECTION);
 			}
 		}
 		return ViewUtil.render(request, model, Path.Template.LOGIN);

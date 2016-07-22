@@ -1,0 +1,32 @@
+<nav class="navbar navbar-default">
+	<div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+			</button>
+			<a class="navbar-brand" href="/">Movie Collection</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+			<form class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search For Movie">
+					<button type="button" class="btn btn-default">Search</button>
+				</div>
+			</form>
+			<ul class="nav navbar-nav navbar-right">
+				#if($notLoggedIn)
+					<li><a href="login">Login</a></li>
+				#else
+					<li><p class="navbar-text">Welcome $currentUser</p></li>
+					<li>
+						<form class="nav" action="logout" method="post">
+							<button type="submit" class="btn btn-link navbar-btn">Logout</button>
+						</form>
+					</li>
+				#end
+			</ul>
+		</div>
+	</div>
+</nav>

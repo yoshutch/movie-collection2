@@ -10,11 +10,13 @@ public class Path {
 		@Getter public static final String LOGIN = "/login";
 		@Getter public static final String LOGOUT = "/logout";
 		@Getter public static final String SIGNUP = "/signup";
+		@Getter public static final String COLLECTION = "/collection";
 	}
 
 	public static class Template {
 		public static final String INDEX = "/velocity/index.vm";
 		public static final String LOGIN = "/velocity/login.vm";
 		public static final String SIGNUP = "/velocity/signup.vm";
+		public static final String COLLECTION = "/velocity/collection.vm";
 	}
 }

@@ -56,7 +56,7 @@ public class SignupController {
 		userDao.save(user);
 
 		request.session().attribute("currentUser", username);
-		response.redirect(Path.Web.INDEX);
+		response.redirect(Path.Web.COLLECTION);
 		return null;
 	};
 }

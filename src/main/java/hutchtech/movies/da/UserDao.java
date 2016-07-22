@@ -1,6 +1,7 @@
 package hutchtech.movies.da;
 
 import com.mongodb.*;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -28,11 +29,7 @@ public class UserDao {
 
 	public User getUserByUsername(String username){
 		final MongoCollection<Document> users = database.getCollection("Users");
-		LOG.debug("users: " + users);
-		final Document document = users.find(Filters.eq("username", username)).first();
-		LOG.debug("doc: " + document);
-
-		return mapDocumentToUser(document);
+		return mapDocumentToUser(users.find(Filters.eq("username", username)).first());
 	}
 
 	public void save(User user){
@@ -40,6 +37,9 @@ public class UserDao {
 	}
 
 	private User mapDocumentToUser(Document document){
+		if (document == null){
+			return null;
+		}
 		User user = new User();
 		user.setId(document.getObjectId("_id").toString());
 		user.setUsername(document.getString("username"));

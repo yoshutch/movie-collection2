@@ -1,25 +1,43 @@
 <html>
 <head>
 	<title>Register</title>
+	#parse("util/common-head.vm")
 </head>
 <body>
-	<form id="signonForm" method="post">
-		#if (!$signupErrors.isEmpty())
-			<ul>
-			#foreach($error in $signupErrors)
-				<li>$error</li>
+#parse("util/header.vm")
+<div class="container">
+	<h1>Register</h1>
+	<div class="col-md-4"></div>
+	<div class="col-md-4">
+		<form id="signupForm" method="post">
+			#if ($signupErrors.size() > 0)
+				<div class="alert alert-danger" role="alert">
+					<ul>
+						#foreach($error in $signupErrors)
+							<li>$error</li>
+						#end
+					</ul>
+				</div>
 			#end
-			</ul>
-		#end
-		<h1>Register</h1>
-		<label for="username">Username</label>
-		<input id="username" name="username" type="text"/>
-		<label for="password1">Password</label>
-		<input id="password1" name="password" type="password"/>
-		<label for="password2">Confirm Password</label>
-		<input id="password2" name="passwordConf" type="password"/>
+			<div class="form-group">
+				<label for="username">Username</label>
+				<input id="username" type="text" class="form-control" name="username" required/>
+			</div>
+			<div class="form-group">
+				<label for="password1">Password</label>
+				<input id="password1" type="password" class="form-control" name="password" required/>
+			</div>
+			<div class="form-group">
+				<label for="password2">Confirm Password</label>
+				<input id="password2" type="password" class="form-control" name="passwordConf" required/>
+			</div>
+			<div class="form-group">
+				<input type="submit" class="btn btn-primary btn-block form-group" value="Register">
+			</div>
+		</form>
+	</div>
+	<div class="col-md-4"></div>
+</div>
 
-		<input type="submit" value="Register"/>
-	</form>
 </body>
 </html>

@@ -1,5 +1,8 @@
 package hutchtech.movies.util;
 
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.event.implement.IncludeRelativePath;
+import org.apache.velocity.runtime.RuntimeConstants;
 import spark.ModelAndView;
 import spark.Request;
 import spark.template.velocity.VelocityTemplateEngine;
@@ -22,7 +25,10 @@ public class ViewUtil {
 	}
 
 	private static VelocityTemplateEngine velocityTemplateEngine(){
-		VelocityTemplateEngine engine = new VelocityTemplateEngine();
-		return engine;
+		VelocityEngine engine = new VelocityEngine();
+		engine.setProperty("resource.loader", "class");
+		engine.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		engine.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName());
+		return new VelocityTemplateEngine(engine);
 	}
 }
