@@ -1,5 +1,6 @@
 package hutchtech.movies.controller;
 
+import hutchtech.movies.domain.Movie;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
 import spark.Request;
@@ -7,6 +8,7 @@ import spark.Response;
 import spark.Route;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,4 +20,6 @@ public class MovieController {
 		Map<String, Object> model = new HashMap<>();
 		return ViewUtil.render(request, model, Path.Template.COLLECTION);
 	};
+
+
 }

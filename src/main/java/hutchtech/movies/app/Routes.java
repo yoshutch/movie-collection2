@@ -14,6 +14,7 @@ import spark.Request;
 import spark.Response;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static spark.Spark.*;
 /**
@@ -30,9 +31,11 @@ public class Routes {
 		port(getHerokuAssignedPort());
 
 		get(Path.Web.INDEX, (req, res) -> {
-			final Movie m = OimdbClient.findMovieByImdbId("tt0088763");
-			LOG.debug(m);
-			return ViewUtil.render(req, new HashMap<String, Object>(), Path.Template.INDEX);
+//			final Movie m = OimdbClient.findMovieByImdbId("tt0088763");
+//			LOG.debug(m);
+			final List<Movie> movies = OimdbClient.findMoviesByTitle("Star Wars");
+			LOG.debug(movies);
+			return ViewUtil.render(req, new HashMap<>(), Path.Template.INDEX);
 		});
 		get(Path.Web.LOGIN, LoginController.serveLoginPage);
 		post(Path.Web.LOGIN, LoginController.handleLoginPost);

@@ -1,6 +1,5 @@
 package hutchtech.movies;
 
-import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hutchtech.movies.domain.Movie;
@@ -11,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Scott Hutchings on 7/21/2016.
@@ -19,7 +21,20 @@ public class OimdbClient {
 	private static final Logger LOG = Logger.getLogger(OimdbClient.class);
 
 	public static Movie findMovieByImdbId(String imdbId) throws IOException {
-		URL url = new URL("http://www.omdbapi.com/?i=" + imdbId + "&r=json");
+		final URL url = new URL("http://www.omdbapi.com/?i=" + URLEncoder.encode (imdbId,"UTF-8") + "&r=json");
+
+		return mapper().readValue(httpGetRequest(url), Movie.class);
+	}
+
+	public static List<Movie> findMoviesByTitle(String title) throws IOException{
+		final URL url = new URL("http://www.omdbapi.com/?s=" + URLEncoder.encode(title, "UTF-8") + "&r=json");
+
+		final String m = mapper().readTree(httpGetRequest(url)).path("Search").toString();
+		final Movie[] movies = mapper().readValue(m, Movie[].class);
+		return Arrays.asList(movies);
+	}
+
+	private static String httpGetRequest(URL url) throws IOException{
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Accept", "application/json");
@@ -39,7 +54,7 @@ public class OimdbClient {
 
 		conn.disconnect();
 
-		return mapper().readValue(output, Movie.class);
+		return output;
 	}
 
 	private static ObjectMapper mapper(){
