@@ -1,0 +1,29 @@
+<html>
+<head>
+	<title>Login</title>
+	#parse("util/common-head.vm")
+
+</head>
+<body>
+#parse("util/header.vm")
+<div class="container movies">
+
+	#foreach($movie in $movies)
+		<!--<div class="">-->
+			<div class="thumbnail movie">
+				#if($movie.posterUrl == "N/A")
+				<span class="glyphicon glyphicon-film"></span>
+				#else
+				<img src="$movie.posterUrl"/>
+				#end
+
+				<div class="caption">
+					<h3>$movie.title <small>$movie.rating</small></h3>
+					<a href="#" class="btn btn-primary btn-block">Add to Collection</a>
+				</div>
+			</div>
+		<!--</div>-->
+	#end
+</div>
+</body>
+</html>

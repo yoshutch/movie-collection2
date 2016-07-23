@@ -11,7 +11,7 @@ public class Path {
 		@Getter public static final String LOGOUT = "/logout";
 		@Getter public static final String SIGNUP = "/signup";
 		@Getter public static final String COLLECTION = "/collection";
-		@Getter public static final String SEARCH_MOVIE = "/movies/search";
+		@Getter public static final String MOVIES_SEARCH = "/movies/search";
 	}
 
 	public static class Template {
@@ -19,5 +19,6 @@ public class Path {
 		public static final String LOGIN = "/velocity/login.vm";
 		public static final String SIGNUP = "/velocity/signup.vm";
 		public static final String COLLECTION = "/velocity/collection.vm";
+		public static final String MOVIES_SEARCH = "/velocity/search.vm";
 	}
 }

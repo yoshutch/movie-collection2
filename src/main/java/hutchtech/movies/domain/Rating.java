@@ -8,15 +8,16 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum Rating {
 	G ("G"),
 	PG ("PG"),
-	PG13 ("PG13"),
+	PG13 ("PG-13"),
 	R ("R"),
-	TVY ("TV7"),
-	TVY7 ("TVY7"),
-	TVG ("TVG"),
-	TVPG ("TVPG"),
-	TV14 ("TV14"),
-	TVMA ("TVMA"),
-	NA ("N/A");
+	TVY ("TV-Y"),
+	TVY7 ("TV-Y7"),
+	TVG ("TV-G"),
+	TVPG ("TV-PG"),
+	TV14 ("TV-14"),
+	TVMA ("TV-MA"),
+	NA ("N/A"),
+	UNRATED ("UNRATED");
 
 	private String val;
 
@@ -25,7 +26,7 @@ public enum Rating {
 	}
 
 	@JsonValue
-	public String getValue(){
+	public String toString(){
 		return val;
 	}
 }

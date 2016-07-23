@@ -1,5 +1,6 @@
 package hutchtech.movies.controller;
 
+import hutchtech.movies.OimdbClient;
 import hutchtech.movies.domain.Movie;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
@@ -21,5 +22,12 @@ public class MovieController {
 		return ViewUtil.render(request, model, Path.Template.COLLECTION);
 	};
 
+	public static Route searchMovies = (Request request, Response response) -> {
+		Map<String, Object> model = new HashMap<>();
+		final String search = request.queryParams("search");
+		final List<Movie> movies = OimdbClient.findMoviesByTitle(search);
+		model.put("movies", movies);
+		return ViewUtil.render(request, model, Path.Template.MOVIES_SEARCH);
+	};
 
 }

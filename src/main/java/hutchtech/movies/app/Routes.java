@@ -9,9 +9,6 @@ import hutchtech.movies.domain.Movie;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
 import org.apache.log4j.Logger;
-import spark.Filter;
-import spark.Request;
-import spark.Response;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +26,7 @@ public class Routes {
 		userDao = new UserDao();
 
 		port(getHerokuAssignedPort());
+		staticFileLocation("/css");
 
 		get(Path.Web.INDEX, (req, res) -> {
 //			final Movie m = OimdbClient.findMovieByImdbId("tt0088763");
@@ -43,6 +41,7 @@ public class Routes {
 		get(Path.Web.SIGNUP, SignupController.serveSignupPage);
 		post(Path.Web.SIGNUP, SignupController.handleSignupPost);
 		get(Path.Web.COLLECTION, MovieController.myMovieCollection);
+		get(Path.Web.MOVIES_SEARCH, MovieController.searchMovies);
 
 		before(Path.Web.COLLECTION, LoginController::ensureUserIsLoggedIn);
 	}

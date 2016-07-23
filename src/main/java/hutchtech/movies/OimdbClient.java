@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,11 +28,15 @@ public class OimdbClient {
 	}
 
 	public static List<Movie> findMoviesByTitle(String title) throws IOException{
-		final URL url = new URL("http://www.omdbapi.com/?s=" + URLEncoder.encode(title, "UTF-8") + "&r=json");
+		final URL url = new URL("http://www.omdbapi.com/?s=" + URLEncoder.encode(title, "UTF-8") + "&type=movie&r=json");
 
 		final String m = mapper().readTree(httpGetRequest(url)).path("Search").toString();
 		final Movie[] movies = mapper().readValue(m, Movie[].class);
-		return Arrays.asList(movies);
+		List<Movie> movieList = new ArrayList<>();
+		for (Movie movie : movies) {
+			movieList.add(findMovieByImdbId(movie.getImdbId()));
+		}
+		return movieList;
 	}
 
 	private static String httpGetRequest(URL url) throws IOException{
