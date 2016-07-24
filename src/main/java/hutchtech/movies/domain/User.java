@@ -8,6 +8,7 @@ public class User {
 
 	private String id;
 	private String username;
+	private String name;
 	private String salt;
 	private String hashedPassword;
 
@@ -25,6 +26,14 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name){
+		this.name = name;
 	}
 
 	public String getSalt() {

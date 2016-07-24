@@ -1,7 +1,6 @@
 package hutchtech.movies.da;
 
 import com.mongodb.*;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -14,17 +13,12 @@ import org.bson.Document;
  */
 public class UserDao {
 
-	public static final Logger LOG = Logger.getLogger(UserDao.class);
+	private static final Logger LOG = Logger.getLogger(UserDao.class);
 
-	private MongoClient mongoClient;
-	private MongoDatabase database;
+	private DB database;
 
-	public UserDao() {
-
-		MongoClientURI mongoUrl = new MongoClientURI(System.getenv("MONGODB_URI"));
-		mongoClient = new MongoClient(mongoUrl);
-		database = mongoClient.getDatabase(mongoUrl.getDatabase());
-		LOG.debug(database.listCollectionNames().first());
+	public UserDao(DB db) {
+		this.database = db;
 	}
 
 	public User getUserByUsername(String username){
@@ -33,7 +27,14 @@ public class UserDao {
 	}
 
 	public void save(User user){
-		database.getCollection("Users").insertOne(mapUserToDocument(user));
+		database.getCollection("Users").insertOne(mapNewUserToDocument(user));
+	}
+
+	public void update(User user){
+		database.getCollection("Users").updateOne(
+				new Document().append("_id", user.getId()),
+				mapUserToDocument(user)
+		);
 	}
 
 	private User mapDocumentToUser(Document document){
@@ -43,6 +44,7 @@ public class UserDao {
 		User user = new User();
 		user.setId(document.getObjectId("_id").toString());
 		user.setUsername(document.getString("username"));
+		user.setName(document.getString("name"));
 		user.setSalt(document.getString("salt"));
 		user.setHashedPassword(document.getString("hashedPassword"));
 
@@ -50,8 +52,14 @@ public class UserDao {
 	}
 
 	private Document mapUserToDocument(User user){
+		return mapNewUserToDocument(user)
+				.append("_id", user.getId());
+	}
+
+	private Document mapNewUserToDocument(User user){
 		return new Document()
 				.append("username", user.getUsername())
+				.append("name", user.getName())
 				.append("salt", user.getSalt())
 				.append("hashedPassword", user.getHashedPassword());
 	}

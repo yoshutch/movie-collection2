@@ -12,7 +12,7 @@ public class Movie {
 	@JsonProperty("imdbID")
 	private String imdbId;
 	@JsonIgnore
-	private String userIdl;
+	private String collectionId;
 	@JsonProperty("Title")
 	private String title;
 	@JsonProperty("Rated")
@@ -32,12 +32,12 @@ public class Movie {
 		this.imdbId = imdbId;
 	}
 
-	public String getUserIdl() {
-		return userIdl;
+	public String getCollectionId() {
+		return collectionId;
 	}
 
-	public void setUserIdl(String userIdl) {
-		this.userIdl = userIdl;
+	public void setCollectionId(String collectionId) {
+		this.collectionId = collectionId;
 	}
 
 	public String getTitle() {
@@ -84,7 +84,7 @@ public class Movie {
 	public String toString() {
 		return "Movie{" +
 				"imdbId='" + imdbId + '\'' +
-				", userIdl='" + userIdl + '\'' +
+				", collectionId='" + collectionId + '\'' +
 				", title='" + title + '\'' +
 				", rating=" + rating +
 				", runtime='" + runtime + '\'' +

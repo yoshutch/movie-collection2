@@ -4,6 +4,8 @@ import hutchtech.movies.OimdbClient;
 import hutchtech.movies.controller.LoginController;
 import hutchtech.movies.controller.MovieController;
 import hutchtech.movies.controller.SignupController;
+import hutchtech.movies.da.CollectionDao;
+import hutchtech.movies.da.DB;
 import hutchtech.movies.da.UserDao;
 import hutchtech.movies.domain.Movie;
 import hutchtech.movies.util.Path;
@@ -21,9 +23,13 @@ public class Routes {
 
 	public static final Logger LOG = Logger.getLogger(Routes.class);
 	public static UserDao userDao;
+	public static CollectionDao collectionDao;
 
 	public static void main(String[] args) {
-		userDao = new UserDao();
+		DB db = new DB();
+
+		userDao = new UserDao(db);
+		collectionDao = new CollectionDao(db);
 
 		port(getHerokuAssignedPort());
 		staticFileLocation("/css");

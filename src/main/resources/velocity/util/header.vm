@@ -19,7 +19,7 @@
 				#if($notLoggedIn)
 					<li><a href="login">Login</a></li>
 				#else
-					<li><p class="navbar-text">Welcome $currentUser</p></li>
+					<li><p class="navbar-text">Welcome $currentUser.name</p></li>
 					<li>
 						<form class="nav" action="logout" method="post">
 							<button type="submit" class="btn btn-link navbar-btn">Logout</button>

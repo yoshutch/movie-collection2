@@ -1,12 +1,15 @@
 package hutchtech.movies.controller;
 
 import hutchtech.movies.controller.UserController;
+import hutchtech.movies.domain.User;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
 import spark.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static hutchtech.movies.app.Routes.userDao;
 
 /**
  * Created by Scott Hutchings on 7/20/2016.
@@ -23,7 +26,8 @@ public class LoginController {
 		if (!UserController.authenticate(request.queryParams("username"), request.queryParams("password"))){
 			model.put("authenticationFailed", true);
 		} else {
-			request.session().attribute("currentUser", request.queryParams("username"));
+			final User currentUser = userDao.getUserByUsername(request.queryParams("username"));
+			request.session().attribute("currentUser", currentUser);
 			if (request.session().attribute("loginRedirect") != null) {
 				response.redirect(request.session().attribute("loginRedirect"));
 			} else {

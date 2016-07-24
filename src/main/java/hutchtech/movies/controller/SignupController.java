@@ -28,6 +28,7 @@ public class SignupController {
 	public static Route handleSignupPost = (Request request, Response response) -> {
 		Map<String, Object> model = new HashMap<>();
 		final String username = request.queryParams("username");
+		final String name = request.queryParams("name");
 		final String password = request.queryParams("password");
 		final String passwordConf = request.queryParams("passwordConf");
 
@@ -51,11 +52,12 @@ public class SignupController {
 
 		User user = new User();
 		user.setUsername(username);
+		user.setName(name);
 		user.setSalt(BCrypt.gensalt());
 		user.setHashedPassword(BCrypt.hashpw(password, user.getSalt()));
 		userDao.save(user);
 
-		request.session().attribute("currentUser", username);
+		request.session().attribute("currentUser", userDao.getUserByUsername(username));
 		response.redirect(Path.Web.COLLECTION);
 		return null;
 	};
