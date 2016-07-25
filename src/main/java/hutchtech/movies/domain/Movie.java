@@ -23,6 +23,8 @@ public class Movie {
 	private String posterUrl;
 	@JsonProperty("Genre")
 	private List<String> genres;
+	@JsonIgnore
+	private List<Medium> mediums;
 
 	public String getImdbId() {
 		return imdbId;
@@ -80,6 +82,14 @@ public class Movie {
 		this.genres = genres;
 	}
 
+	public List<Medium> getMediums() {
+		return mediums;
+	}
+
+	public void setMediums(List<Medium> mediums) {
+		this.mediums = mediums;
+	}
+
 	@Override
 	public String toString() {
 		return "Movie{" +
@@ -90,6 +100,23 @@ public class Movie {
 				", runtime='" + runtime + '\'' +
 				", posterUrl='" + posterUrl + '\'' +
 				", genres=" + genres +
+				", mediums=" + mediums +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Movie movie = (Movie) o;
+
+		return imdbId.equals(movie.imdbId);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return imdbId.hashCode();
 	}
 }

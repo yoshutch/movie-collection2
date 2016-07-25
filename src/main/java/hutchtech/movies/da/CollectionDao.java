@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import hutchtech.movies.domain.Collection;
+import hutchtech.movies.domain.Medium;
 import hutchtech.movies.domain.Movie;
 import hutchtech.movies.domain.Rating;
 import org.apache.log4j.Logger;
@@ -37,7 +38,7 @@ public class CollectionDao {
 	}
 
 	public Collection getCollectionById(String id){
-		Document document = database.getCollection("Collections").find(Filters.eq("_id", id)).first();
+		Document document = database.getCollection("Collections").find(Filters.eq("_id", new ObjectId(id))).first();
 		return mapDocumentToCollection(document);
 	}
 
@@ -81,13 +82,21 @@ public class CollectionDao {
 	}
 
 	private Document mapMovieToDocument (Movie movie){
+		final List<Medium> mediums = movie.getMediums();
+		BasicDBList list = new BasicDBList();
+		for (Medium medium : mediums) {
+			list.add(new Document()
+					.append("val", medium.getVal())
+					.append("note", medium.getNote()));
+		}
 		return new Document()
 				.append("imdbId", movie.getImdbId())
 				.append("title", movie.getTitle())
 				.append("poster", movie.getPosterUrl())
 				.append("rating", movie.getRating().toString())
 				.append("runtime", movie.getRuntime())
-				.append("genres", movie.getGenres());
+				.append("genres", movie.getGenres())
+				.append("mediums", list);
 	}
 
 	private Movie mapDocumentToMovie (Document document) {
@@ -97,6 +106,14 @@ public class CollectionDao {
 		movie.setPosterUrl(document.getString("poster"));
 		movie.setRating(Rating.valueOf(document.getString("rating")));
 		movie.setGenres((List<String>) document.get("genres"));
+		final List<Document> mediumsList = (List<Document>) document.get("mediums");
+		List<Medium> mediums = new ArrayList<>();
+		if (mediumsList != null) {
+			for (Document document1 : mediumsList) {
+				mediums.add(new Medium(document1.getString("val"), document1.getString("note")));
+			}
+			movie.setMediums(mediums);
+		}
 		return movie;
 	}
 

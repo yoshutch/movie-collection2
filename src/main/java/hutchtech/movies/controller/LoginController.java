@@ -45,7 +45,11 @@ public class LoginController {
 
 	public static void ensureUserIsLoggedIn (Request request, Response response) {
 		if (request.session().attribute("currentUser") == null){
-			request.session().attribute("loginRedirect", request.pathInfo());
+			String loginRedirect = request.pathInfo();
+			if (request.queryString() != null && !request.queryString().isEmpty()){
+				loginRedirect += "?" + request.queryString();
+			}
+			request.session().attribute("loginRedirect", loginRedirect);
 			response.redirect(Path.Web.LOGIN);
 		}
 	}

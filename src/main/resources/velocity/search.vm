@@ -1,8 +1,48 @@
 <html>
 <head>
-	<title>Login</title>
+	<title>Search</title>
 	#parse("util/common-head.vm")
 
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#movieModal").on("shown.bs.modal", function(event){
+				var button = $(event.relatedTarget);
+				var imdbId = button.data("imdbid");
+				console.log(imdbId);
+				var poster = $("img[data-imdbid='" + imdbId + "']").attr("src");
+				$("#dialogPoster").attr("src", poster);
+				$("input[name='imdbId']").val(imdbId);
+			});
+
+			$(".own-btn").on("click", function(){
+				var medium = $(this).data("medium");
+				var alreadyOwn = $("input[name='" + medium + "']").val();
+				if (alreadyOwn == "Y"){
+					$("input[name='" + medium + "']").val("");
+					$(this).removeClass("btn-info");
+				} else {
+					$("input[name='" + medium + "']").val("Y");
+					$(this).addClass("btn-info");
+				}
+			});
+
+			$("#addToCollectionBtn").on("click", function(){
+				var url = $("#addMovieForm").attr("action");
+				var data = $("#addMovieForm").serialize();
+				$.ajax({
+					method: "POST",
+					url: url,
+					data: data
+				}).done(function(result){
+					console.log(result);
+					if (JSON.parse(result).Success == "true"){
+						$("#movieModal").modal("hide");
+						$("#successModal").modal("show");
+					}
+				});
+			});
+		});
+	</script>
 </head>
 <body>
 #parse("util/header.vm")
@@ -14,16 +54,93 @@
 				#if($movie.posterUrl == "N/A")
 				<span class="glyphicon glyphicon-film"></span>
 				#else
-				<img src="$movie.posterUrl"/>
+				<img data-imdbid="${movie.imdbId}" src="$movie.posterUrl"/>
 				#end
 
 				<div class="caption">
 					<h3>$movie.title <small>$movie.rating</small></h3>
-					<a href="#" class="btn btn-primary btn-block">Add to Collection</a>
+					<button type="button" class="btn btn-primary btn-block"
+					   data-toggle="modal" data-target="#movieModal"
+					   data-imdbid="${movie.imdbId}">Add to Collection</button>
 				</div>
 			</div>
 		<!--</div>-->
 	#end
+	<div id="movieModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form id="addMovieForm" action="$WebPath.getADD_MOVIE()" method="post" class="form-inline">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Add Movie to My Collection</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-5">
+								<img id="dialogPoster" src=""/>
+							</div>
+							<div class="col-md-7">
+								<button id="dvdBtn" type="button" class="own-btn btn btn-default btn-block" data-medium="dvd">DVD</button>
+								<button id="bluRayBtn" type="button" class="own-btn btn btn-default btn-block" data-medium="bluRay">Blu-ray</button>
+								<button id="vhsBtn" type="button" class="own-btn btn btn-default btn-block" data-medium="vhs">VHS</button>
+								<hr/>
+								<div class="form-group">
+									<input id="amazonText" type="text" name="amazonText" class="form-control" placeholder="Amazon Instant Video URL">
+									<button id="amazonBtn" type="button" class="own-btn btn btn-default" data-medium="amazon">Amazon</button>
+								</div>
+								<div class="form-group">
+									<input id="uvText" type="text" name="ultravioletText" class="form-control" placeholder="UltraViolet video URL">
+									<button id="uvBtn" type="button" class="own-btn btn btn-default" data-medium="ultraviolet">UltraViolet</button>
+								</div>
+								<div class="form-group">
+									<input id="playText" type="text" name="playText" class="form-control" placeholder="Google Play video URL">
+									<button id="playBtn" type="button" class="own-btn btn btn-default" data-medium="play">Google Play</button>
+								</div>
+								<div class="form-group">
+									<input id="digitalText" type="text" name="digitalText" class="form-control" placeholder="video URL">
+									<button id="digitalBtn" type="button" class="own-btn btn btn-default" data-medium="digital">Other Digital</button>
+								</div>
+								<input type="hidden" name="imdbId"/>
+								<input type="hidden" name="dvd"/>
+								<input type="hidden" name="bluRay"/>
+								<input type="hidden" name="vhs"/>
+								<input type="hidden" name="amazon"/>
+								<input type="hidden" name="ultraviolet"/>
+								<input type="hidden" name="play"/>
+								<input type="hidden" name="digital"/>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="float-left btn btn-default" data-dismiss="modal">Close</button>
+						<label for="selectCollection">Choose Collection:</label>
+						<select id="selectCollection" class="form-control" name="collectionId">
+							#foreach($collection in $collections)
+								<option value="$collection.id">$collection.name</option>
+							#end
+						</select>
+						<button id="addToCollectionBtn" type="button" class="btn btn-primary">Add to Collection</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="successModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Success</h4>
+				</div>
+				<div class="modal-body">
+					<p id="successMsg">Movie added to collection</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>

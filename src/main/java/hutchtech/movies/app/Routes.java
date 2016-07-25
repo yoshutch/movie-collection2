@@ -52,7 +52,11 @@ public class Routes {
 		get(Path.Web.COLLECTION, CollectionController.viewMovieCollection);
 		get(Path.Web.MOVIES_SEARCH, MovieController.searchMovies);
 
+		post(Path.Web.ADD_MOVIE, MovieController.addMovieToCollection);
+
 		before(Path.Web.COLLECTION, LoginController::ensureUserIsLoggedIn);
+		before(Path.Web.MOVIES_SEARCH, LoginController::ensureUserIsLoggedIn);
+		before(Path.Web.ADD_MOVIE, LoginController::ensureUserIsLoggedIn);
 	}
 
 	private static int getHerokuAssignedPort(){

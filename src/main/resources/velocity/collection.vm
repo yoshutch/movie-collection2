@@ -12,7 +12,8 @@
 <div class="container">
 	<h3>Collection: $collection.name</h3>
 	#foreach($movie in $collection.movies)
-	<p>$movie.title</p>
+		<p>$movie.title</p>
+		<p>$movie.mediums</p>
 	#end
 </div>
 

@@ -12,6 +12,7 @@ public class Path {
 		@Getter public static final String SIGNUP = "/signup";
 		@Getter public static final String COLLECTION = "/collection";
 		@Getter public static final String MOVIES_SEARCH = "/movies/search";
+		@Getter public static final String ADD_MOVIE = "/movies/add";
 	}
 
 	public static class Template {

@@ -21,3 +21,11 @@
 .movie .caption {
 
 }
+
+#dialogPoster {
+	width: 100%;
+}
+
+.float-left {
+	float: left;
+}
