@@ -11,10 +11,32 @@
 #parse("util/header.vm")
 <div class="container">
 	<h3>Collection: $collection.name</h3>
-	#foreach($movie in $collection.movies)
-		<p>$movie.title</p>
-		<p>$movie.mediums</p>
-	#end
+	<div class="movies">
+		#foreach($movie in $collection.movies)
+			<div class="thumbnail movie">
+				#if($movie.posterUrl == "N/A")
+					<span class="glyphicon glyphicon-film"></span>
+				#else
+					<img data-imdbid="${movie.imdbId}" src="$movie.posterUrl"/>
+				#end
+
+				<div class="caption">
+					<h3>$movie.title <small>$movie.rating</small></h3>
+					<p>$movie.runtime</p>
+					<p>
+						#foreach($genre in $movie.genres)
+							<span class="label label-default">$genre</span>
+						#end
+					</p>
+				</div>
+				<div class="center-align">
+					#foreach($medium in $movie.mediums)
+					<button type="button" class="btn btn-default btn-small">$medium.val</button>
+					#end
+				</div>
+			</div>
+		#end
+	</div>
 </div>
 
 </body>

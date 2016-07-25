@@ -59,9 +59,12 @@
 
 				<div class="caption">
 					<h3>$movie.title <small>$movie.rating</small></h3>
+
+				</div>
+				<div>
 					<button type="button" class="btn btn-primary btn-block"
-					   data-toggle="modal" data-target="#movieModal"
-					   data-imdbid="${movie.imdbId}">Add to Collection</button>
+							data-toggle="modal" data-target="#movieModal"
+							data-imdbid="${movie.imdbId}">Add to Collection</button>
 				</div>
 			</div>
 		<!--</div>-->
@@ -137,6 +140,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<a href="$WebPath.getCOLLECTION()" class="btn btn-default">View Collection</a>
 				</div>
 			</div>
 		</div>

@@ -105,6 +105,7 @@ public class CollectionDao {
 		movie.setTitle(document.getString("title"));
 		movie.setPosterUrl(document.getString("poster"));
 		movie.setRating(Rating.valueOf(document.getString("rating")));
+		movie.setRuntime(document.getString("runtime"));
 		movie.setGenres((List<String>) document.get("genres"));
 		final List<Document> mediumsList = (List<Document>) document.get("mediums");
 		List<Medium> mediums = new ArrayList<>();
