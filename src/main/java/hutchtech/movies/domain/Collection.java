@@ -1,5 +1,8 @@
 package hutchtech.movies.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -8,8 +11,8 @@ import java.util.Set;
 public class Collection {
 	private String id;
 	private String name;
-	private Set<Movie> movies;
-	private Set<User> users;
+	private List<Movie> movies;
+	private List<String> users;
 
 	public String getId() {
 		return id;
@@ -27,19 +30,19 @@ public class Collection {
 		this.name = name;
 	}
 
-	public Set<Movie> getMovies() {
+	public List<Movie> getMovies() {
 		return movies;
 	}
 
-	public void setMovies(Set<Movie> movies) {
+	public void setMovies(List<Movie> movies) {
 		this.movies = movies;
 	}
 
-	public Set<User> getUsers() {
+	public List<String> getUsers() {
 		return users;
 	}
 
-	public void setUsers(Set<User> users) {
+	public void setUsers(List<String> users) {
 		this.users = users;
 	}
 

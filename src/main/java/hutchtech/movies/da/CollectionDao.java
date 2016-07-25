@@ -1,11 +1,17 @@
 package hutchtech.movies.da;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import hutchtech.movies.domain.Collection;
+import hutchtech.movies.domain.Movie;
+import hutchtech.movies.domain.Rating;
 import org.apache.log4j.Logger;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
-import static hutchtech.movies.app.Routes.userDao;
+import java.util.*;
 
 /**
  * Created by yoshutch on 7/24/16.
@@ -19,38 +25,79 @@ public class CollectionDao {
 		this.database = db;
 	}
 
+	public List<Collection> getCollectionsForUserId(String userId){
+		BasicDBObject query = new BasicDBObject();
+		query.put("users", Arrays.asList(userId));
+		final FindIterable<Document> iterable = database.getCollection("Collections").find(query);
+		List<Collection> result = new ArrayList<>();
+		for (Document document : iterable) {
+			result.add(mapDocumentToCollection(document));
+		}
+		return result;
+	}
+
 	public Collection getCollectionById(String id){
 		Document document = database.getCollection("Collections").find(Filters.eq("_id", id)).first();
 		return mapDocumentToCollection(document);
 	}
 
 	public void saveCollection(Collection collection){
-		database.getCollection("Collections").insertOne(mapNewCollectionToDocument(collection));
+		database.getCollection("Collections").insertOne(mapCollectionToDocument(collection));
 	}
 
 	public void updateCollection(Collection collection){
+		final Document bson1 = mapCollectionToDocument(collection);
+//		database.getCollection("Collections").updateOne(
+//				new Document().append("_id", collection.getId()),
+//				bson1);
+		BasicDBList movieList = new BasicDBList();
+		for (Movie movie : collection.getMovies()) {
+			movieList.add(mapMovieToDocument(movie));
+		}
 		database.getCollection("Collections").updateOne(
-				new Document().append("_id", collection.getId()),
-				mapCollectionToDocument(collection));
+				Filters.eq("_id", new ObjectId(collection.getId())),
+				new Document("$set", new Document("movies", movieList)));
 	}
 
-	private Document mapNewCollectionToDocument(Collection collection){
+	private Document mapCollectionToDocument(Collection collection){
 		return new Document()
 				.append("name", collection.getName())
 				.append("users", collection.getUsers())
 				.append("movies", collection.getMovies());
 	}
 
-	private Document mapCollectionToDocument(Collection collection){
-		return mapNewCollectionToDocument(collection)
-				.append("_id", collection.getId());
-	}
-
 	private Collection mapDocumentToCollection(Document document){
 		Collection collection = new Collection();
-		collection.setId(document.getString("_id"));
+		collection.setId(document.get("_id").toString());
 		collection.setName(document.getString("name"));
-
+		collection.setUsers((List<String>) document.get("users"));
+		final ArrayList<Document> movieDocumentArray = (ArrayList<Document>) document.get("movies");
+		List<Movie> movies = new ArrayList<>();
+		for (Document document1 : movieDocumentArray) {
+			movies.add(mapDocumentToMovie(document1));
+		}
+		collection.setMovies(movies);
 		return collection;
 	}
+
+	private Document mapMovieToDocument (Movie movie){
+		return new Document()
+				.append("imdbId", movie.getImdbId())
+				.append("title", movie.getTitle())
+				.append("poster", movie.getPosterUrl())
+				.append("rating", movie.getRating().toString())
+				.append("runtime", movie.getRuntime())
+				.append("genres", movie.getGenres());
+	}
+
+	private Movie mapDocumentToMovie (Document document) {
+		Movie movie = new Movie();
+		movie.setImdbId(document.getString("imdbId"));
+		movie.setTitle(document.getString("title"));
+		movie.setPosterUrl(document.getString("poster"));
+		movie.setRating(Rating.valueOf(document.getString("rating")));
+		movie.setGenres((List<String>) document.get("genres"));
+		return movie;
+	}
+
 }

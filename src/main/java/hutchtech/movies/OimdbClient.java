@@ -3,6 +3,7 @@ package hutchtech.movies;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hutchtech.movies.domain.Movie;
+import hutchtech.movies.util.JsonMapper;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -24,14 +25,24 @@ public class OimdbClient {
 	public static Movie findMovieByImdbId(String imdbId) throws IOException {
 		final URL url = new URL("http://www.omdbapi.com/?i=" + URLEncoder.encode (imdbId,"UTF-8") + "&r=json");
 
-		return mapper().readValue(httpGetRequest(url), Movie.class);
+		final Movie movie = JsonMapper.mapper().readValue(httpGetRequest(url), Movie.class);
+		if (movie.getGenres() != null && movie.getGenres().size() == 1){
+			final String s = movie.getGenres().get(0);
+			final String[] split = s.split(",");
+			List<String> genres = new ArrayList<>();
+			for (String s1 : split) {
+				genres.add(s1.trim());
+			}
+			movie.setGenres(genres);
+		}
+		return movie;
 	}
 
 	public static List<Movie> findMoviesByTitle(String title) throws IOException{
 		final URL url = new URL("http://www.omdbapi.com/?s=" + URLEncoder.encode(title, "UTF-8") + "&type=movie&r=json");
 
-		final String m = mapper().readTree(httpGetRequest(url)).path("Search").toString();
-		final Movie[] movies = mapper().readValue(m, Movie[].class);
+		final String m = JsonMapper.mapper().readTree(httpGetRequest(url)).path("Search").toString();
+		final Movie[] movies = JsonMapper.mapper().readValue(m, Movie[].class);
 		List<Movie> movieList = new ArrayList<>();
 		for (Movie movie : movies) {
 			movieList.add(findMovieByImdbId(movie.getImdbId()));
@@ -60,12 +71,5 @@ public class OimdbClient {
 		conn.disconnect();
 
 		return output;
-	}
-
-	private static ObjectMapper mapper(){
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-		return mapper;
 	}
 }

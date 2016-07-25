@@ -1,12 +1,17 @@
 package hutchtech.movies.da;
 
 import com.mongodb.*;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import hutchtech.movies.domain.User;
 import org.apache.log4j.Logger;
 import org.bson.Document;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Scott Hutchings on 7/20/2016.
@@ -19,6 +24,16 @@ public class UserDao {
 
 	public UserDao(DB db) {
 		this.database = db;
+	}
+
+	public Set<User> getUsersByIds(Collection<String> ids){
+		final MongoCollection<Document> users = database.getCollection("Users");
+		FindIterable<Document> foundUsers = users.find(Filters.in("_id", ids));
+		Set<User> userSet = new HashSet<>();
+		for (Document foundUser : foundUsers) {
+			userSet.add(mapDocumentToUser(foundUser));
+		}
+		return userSet;
 	}
 
 	public User getUserByUsername(String username){

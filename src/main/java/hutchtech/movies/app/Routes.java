@@ -1,6 +1,9 @@
 package hutchtech.movies.app;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hutchtech.movies.OimdbClient;
+import hutchtech.movies.controller.CollectionController;
 import hutchtech.movies.controller.LoginController;
 import hutchtech.movies.controller.MovieController;
 import hutchtech.movies.controller.SignupController;
@@ -46,7 +49,7 @@ public class Routes {
 		post(Path.Web.LOGOUT, LoginController.handleLogoutPost);
 		get(Path.Web.SIGNUP, SignupController.serveSignupPage);
 		post(Path.Web.SIGNUP, SignupController.handleSignupPost);
-		get(Path.Web.COLLECTION, MovieController.myMovieCollection);
+		get(Path.Web.COLLECTION, CollectionController.viewMovieCollection);
 		get(Path.Web.MOVIES_SEARCH, MovieController.searchMovies);
 
 		before(Path.Web.COLLECTION, LoginController::ensureUserIsLoggedIn);

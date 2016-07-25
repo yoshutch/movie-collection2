@@ -9,6 +9,12 @@
 </head>
 <body>
 #parse("util/header.vm")
+<div class="container">
+	<h3>Collection: $collection.name</h3>
+	#foreach($movie in $collection.movies)
+	<p>$movie.title</p>
+	#end
+</div>
 
 </body>
 </html>
