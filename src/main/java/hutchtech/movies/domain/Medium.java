@@ -2,10 +2,11 @@ package hutchtech.movies.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
+
 /**
  * Created by yoshutch on 7/24/16.
  */
-public class Medium {
+public class Medium implements Comparable<Medium>{
 	public static final Medium DVD = new Medium("DVD");
 	public static final Medium BLURAY = new Medium( "Blu-ray");
 	public static final Medium VHS = new Medium("VHS");
@@ -49,5 +50,10 @@ public class Medium {
 				"val='" + val + '\'' +
 				", note='" + note + '\'' +
 				'}';
+	}
+
+	@Override
+	public int compareTo(Medium m2) {
+		return this.val.compareTo(m2.getVal());
 	}
 }

@@ -4,39 +4,109 @@
 	#parse("util/common-head.vm")
 
 	<script type="text/javascript">
+		var filterGenres = new Array();
+		var filterMediums = new Array();
 
+		$(document).ready(function () {
+			#foreach($genre in $genres)
+				filterGenres.push("$genre");
+				$("#$genre").prop("checked", true);
+			#end
+			#foreach($medium in $mediums)
+				filterMediums.push("$medium.val");
+				$("#$medium.val").prop("checked", true);
+			#end
+			$("#sortBy").on("change", function(){
+				$("#sortForm").submit();
+			});
+			$(".filter-btn").on("click", function () {
+				$("#filter").show();
+			});
+			$(".filterGenre").on("change", function(){
+				var checked = $(this).is(":checked");
+				var v = $(this).attr("value");
+				if (checked) {
+					filterGenres.push(v);
+					filterMovies();
+				} else {
+					var i = filter.indexOf(v);
+					filterGenres.splice(i);
+					filterMovies();
+				}
+			});
+			$(".filterMedium").on("change", function(){
+				var checked = $(this).is(":checked");
+				var v = $(this).attr("value");
+				if (checked) {
+					filterMediums.push(v);
+					filterMovies();
+				} else {
+					var i = filter.indexOf(v);
+					filterMediums.splice(i);
+					filterMovies();
+				}
+			});
+		});
+
+		function filterMovies(){
+			$(".movie").each(function(){
+				for (var i = 0; i < filterGenres.length; i++){
+
+				}
+			});
+		}
 	</script>
 </head>
 <body>
-#parse("util/header.vm")
+	#parse("util/header.vm")
 <div class="container">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-5">
 			<h3>Collection: $collection.name</h3>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-7">
 
-		</div>
-	</div>
-	<div class="row">
-		<form class="form-inline" action="$WebPath.getCOLLECTION()" method="get">
+			<button type="button" class="filter-btn btn btn-default">
+				Genre Filter <span class="badge">$genres.size()</span>
+			</button>
+			<button type="button" class="filter-btn btn btn-default">
+				Medium Filter <span class="badge">$mediums.size()</span>
+			</button>
 
 			<span class="float-right">
-				<label for="sortBy">Sort By:</label>
-				<select id="sortBy" name="sortBy" class="form-control">
-					<option value="$Constants.getSORT_BY_TITLE()">Title</option>
-					<option value="$Constants.getSORT_BY_RUNTIME_SHORT()">Runtime (short to long)</option>
-					<option value="$Constants.getSORT_BY_RUNTIME_LONG()">Runtime (long to short)</option>
-					<option value="$Constants.getSORT_BY_RATING()">Rating</option>
-				</select>
-				<input type="submit" class="btn btn-default" value="Sort"/>
+				<form id="sortForm" class="form-inline" action="$WebPath.getCOLLECTION()" method="get">
+					<label for="sortBy">Sort By:</label>
+					<select id="sortBy" name="sortBy" class="form-control">
+						<option value="$Constants.getSORT_BY_TITLE()">Title</option>
+						<option value="$Constants.getSORT_BY_RUNTIME_SHORT()">Runtime (short to long)</option>
+						<option value="$Constants.getSORT_BY_RUNTIME_LONG()">Runtime (long to short)</option>
+						<option value="$Constants.getSORT_BY_RATING()">Rating</option>
+					</select>
+				</form>
 			</span>
-		</form>
+		</div>
+	</div>
+	<div id="filter" class="row" hidden>
+		<label>Filter by Genres:</label>
+		#foreach($genre in $genres)
+			<label for="$genre" class="checkbox-inline">
+				<input id="$genre" class="filterGenre" value="$genre" type="checkbox"/>
+				$genre
+			</label>
+		#end
+		<br/>
+		<label>Filter by Medium:</label>
+		#foreach($medium in $mediums)
+			<label for="$medium" class="checkbox-inline">
+				<input id="$medium" class="filterMedium" value="$medium" type="checkbox"/>
+				$medium.val
+			</label>
+		#end
 	</div>
 	<hr/>
 	<div class="movies">
 		#foreach($movie in $movies)
-			<div class="thumbnail movie">
+			<div class="thumbnail movie #foreach($genre in $movie.genres)$genre#end #foreach($medium in $movie.mediums)$medium.val#end">
 				#if($movie.posterUrl == "N/A")
 					<span class="glyphicon glyphicon-film"></span>
 				#else
@@ -44,7 +114,9 @@
 				#end
 
 				<div class="caption">
-					<h3>$movie.title <small>$movie.rating</small></h3>
+					<h3>$movie.title
+						<small>$movie.rating</small>
+					</h3>
 					<p>$movie.runtime</p>
 					<p>
 						#foreach($genre in $movie.genres)
@@ -54,7 +126,7 @@
 				</div>
 				<div class="center-align">
 					#foreach($medium in $movie.mediums)
-					<button type="button" class="btn btn-default btn-small">$medium.val</button>
+						<button type="button" class="btn btn-default btn-small">$medium.val</button>
 					#end
 				</div>
 			</div>

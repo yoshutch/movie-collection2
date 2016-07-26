@@ -2,6 +2,7 @@ package hutchtech.movies.controller;
 
 import hutchtech.movies.OimdbClient;
 import hutchtech.movies.domain.Collection;
+import hutchtech.movies.domain.Medium;
 import hutchtech.movies.domain.Movie;
 import hutchtech.movies.domain.User;
 import hutchtech.movies.util.Constants;
@@ -56,6 +57,15 @@ public class CollectionController {
 		} else {
 			Collections.sort(movies);
 		}
+
+		Set<String> genres = new TreeSet<>();
+		Set<Medium> mediums = new TreeSet<>();
+		for (Movie movie : movies) {
+			genres.addAll(movie.getGenres());
+			mediums.addAll(movie.getMediums());
+		}
+		model.put("genres", genres);
+		model.put("mediums", mediums);
 		model.put("movies", movies);
 
 		return ViewUtil.render(request, model, Path.Template.COLLECTION);
