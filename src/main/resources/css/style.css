@@ -30,6 +30,14 @@
 	float: left;
 }
 
+.float-right {
+	float: right;
+}
+
 .center-align {
 	text-align: center;
+}
+
+.right-align {
+	text-align: right;
 }

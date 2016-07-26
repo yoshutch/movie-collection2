@@ -22,6 +22,7 @@ public class ViewUtil {
 			model.put("notLoggedIn", true);
 		}
 		model.put("WebPath", Path.Web.class);
+		model.put("Constants", Constants.class);
 		return velocityTemplateEngine().render(new ModelAndView(model, templatePath));
 	}
 

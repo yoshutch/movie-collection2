@@ -8,11 +8,9 @@ import java.util.List;
 /**
  * Created by Scott Hutchings on 7/21/2016.
  */
-public class Movie {
+public class Movie implements Comparable<Movie> {
 	@JsonProperty("imdbID")
 	private String imdbId;
-	@JsonIgnore
-	private String collectionId;
 	@JsonProperty("Title")
 	private String title;
 	@JsonProperty("Rated")
@@ -32,14 +30,6 @@ public class Movie {
 
 	public void setImdbId(String imdbId) {
 		this.imdbId = imdbId;
-	}
-
-	public String getCollectionId() {
-		return collectionId;
-	}
-
-	public void setCollectionId(String collectionId) {
-		this.collectionId = collectionId;
 	}
 
 	public String getTitle() {
@@ -94,7 +84,6 @@ public class Movie {
 	public String toString() {
 		return "Movie{" +
 				"imdbId='" + imdbId + '\'' +
-				", collectionId='" + collectionId + '\'' +
 				", title='" + title + '\'' +
 				", rating=" + rating +
 				", runtime='" + runtime + '\'' +
@@ -118,5 +107,10 @@ public class Movie {
 	@Override
 	public int hashCode() {
 		return imdbId.hashCode();
+	}
+
+	@Override
+	public int compareTo(Movie m2) {
+		return this.title.compareTo(m2.getTitle());
 	}
 }

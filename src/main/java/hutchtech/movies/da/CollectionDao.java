@@ -43,7 +43,9 @@ public class CollectionDao {
 	}
 
 	public void saveCollection(Collection collection){
-		database.getCollection("Collections").insertOne(mapCollectionToDocument(collection));
+		final Document cDocument = mapCollectionToDocument(collection);
+		database.getCollection("Collections").insertOne(cDocument);
+		collection.setId(cDocument.getObjectId("_id").toString());
 	}
 
 	public void updateCollection(Collection collection){

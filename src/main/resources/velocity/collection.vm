@@ -10,9 +10,32 @@
 <body>
 #parse("util/header.vm")
 <div class="container">
-	<h3>Collection: $collection.name</h3>
+	<div class="row">
+		<div class="col-md-6">
+			<h3>Collection: $collection.name</h3>
+		</div>
+		<div class="col-md-6">
+
+		</div>
+	</div>
+	<div class="row">
+		<form class="form-inline" action="$WebPath.getCOLLECTION()" method="get">
+
+			<span class="float-right">
+				<label for="sortBy">Sort By:</label>
+				<select id="sortBy" name="sortBy" class="form-control">
+					<option value="$Constants.getSORT_BY_TITLE()">Title</option>
+					<option value="$Constants.getSORT_BY_RUNTIME_SHORT()">Runtime (short to long)</option>
+					<option value="$Constants.getSORT_BY_RUNTIME_LONG()">Runtime (long to short)</option>
+					<option value="$Constants.getSORT_BY_RATING()">Rating</option>
+				</select>
+				<input type="submit" class="btn btn-default" value="Sort"/>
+			</span>
+		</form>
+	</div>
+	<hr/>
 	<div class="movies">
-		#foreach($movie in $collection.movies)
+		#foreach($movie in $movies)
 			<div class="thumbnail movie">
 				#if($movie.posterUrl == "N/A")
 					<span class="glyphicon glyphicon-film"></span>

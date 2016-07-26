@@ -62,6 +62,7 @@ public class UserDao {
 		user.setName(document.getString("name"));
 		user.setSalt(document.getString("salt"));
 		user.setHashedPassword(document.getString("hashedPassword"));
+		user.setDefaultCollection(document.getString("defaultCollection"));
 
 		return user;
 	}
@@ -76,6 +77,7 @@ public class UserDao {
 				.append("username", user.getUsername())
 				.append("name", user.getName())
 				.append("salt", user.getSalt())
-				.append("hashedPassword", user.getHashedPassword());
+				.append("hashedPassword", user.getHashedPassword())
+				.append("defaultCollection", user.getDefaultCollection());
 	}
 }

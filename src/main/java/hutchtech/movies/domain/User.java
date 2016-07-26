@@ -11,6 +11,7 @@ public class User {
 	private String name;
 	private String salt;
 	private String hashedPassword;
+	private String defaultCollection;
 
 	public String getId() {
 		return id;
@@ -50,5 +51,13 @@ public class User {
 
 	public void setHashedPassword(String hashedPassword) {
 		this.hashedPassword = hashedPassword;
+	}
+
+	public String getDefaultCollection() {
+		return defaultCollection;
+	}
+
+	public void setDefaultCollection(String defaultCollection) {
+		this.defaultCollection = defaultCollection;
 	}
 }
