@@ -93,7 +93,7 @@ public class CollectionDao {
 				.append("imdbId", movie.getImdbId())
 				.append("title", movie.getTitle())
 				.append("poster", movie.getPosterUrl())
-				.append("rating", movie.getRating().toString())
+				.append("rating", movie.getRating().name())
 				.append("runtime", movie.getRuntime())
 				.append("genres", movie.getGenres())
 				.append("mediums", list);
@@ -117,5 +117,6 @@ public class CollectionDao {
 		}
 		return movie;
 	}
+
 
 }

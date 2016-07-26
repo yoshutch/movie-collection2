@@ -17,7 +17,8 @@ public enum Rating {
 	TV14 ("TV-14"),
 	TVMA ("TV-MA"),
 	NA ("N/A"),
-	UNRATED ("UNRATED");
+	UNRATED ("UNRATED"),
+	NOT_RATED ("NOT RATED");
 
 	private String val;
 
