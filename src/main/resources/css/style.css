@@ -45,3 +45,33 @@
 .padded-left {
 	padding-left: 10px;
 }
+
+.midline{
+	display: flex;
+}
+
+.line, .line-label {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.line {
+	border-bottom: 1px solid #cccccc;
+	flex-grow: 1;
+	height: 11px;
+}
+
+#filter{
+	display: flex;
+	flex-wrap: wrap;
+}
+#filter div {
+	flex-grow: 1;
+}
+
+.vert-bottom {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: flex-end;
+}

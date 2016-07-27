@@ -64,6 +64,10 @@ public class Movie implements Comparable<Movie> {
 		this.posterUrl = posterUrl;
 	}
 
+	public String getHttpsPosterUrl(){
+		return posterUrl.replace("http://", "https://");
+	}
+
 	public List<String> getGenres() {
 		return genres;
 	}

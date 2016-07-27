@@ -21,10 +21,14 @@
 			$(".filter-btn").on("click", function () {
 				var filterVisible = $("#filter").is(":visible");
 				if (filterVisible){
-					$("#filter").hide();
+					$("#filter").slideUp();
 				} else {
-					$("#filter").show();
+					$("#filter").slideDown();
 				}
+			});
+			$("#filter").hide();
+			$("#reset").on("click", function(){
+				$("input[type='checkbox']").prop("checked", true);
 			});
 		});
 	</script>
@@ -63,8 +67,8 @@
 				</select>
 			</div>
 		</div>
-		<div id="filter" class="row" hidden>
-			<div class="col-md-9">
+		<div id="filter" hidden>
+			<div>
 				<label>Genres:</label>
 				#foreach($genre in $genres)
 					<label for="$genre" class="checkbox-inline">
@@ -89,20 +93,23 @@
 					</label>
 				#end
 			</div>
-			<div class="col-md-3 right-align">
+			<div class="right-align vert-bottom">
+				<button id="reset" type="button" class="btn btn-default btn-xs">reset filters</button>
 				<input type="submit" class="btn btn-primary btn-block" value="Filter"/>
 			</div>
 	</form>
 </div>
-<hr/>
-<span class="float-right">Showing $movies.size() movie(s)</span>
+<div class="midline">
+	<div class="line"></div>
+	<div class="line-label">Showing $movies.size() movie#if($movies.size() == 0 || $movies.size() > 1)s#end</div>
+</div>
 <div class="movies">
 	#foreach($movie in $movies)
 		<div class="thumbnail movie #foreach($genre in $movie.genres)$genre#end #foreach($medium in $movie.mediums)$medium.val#end">
 			#if($movie.posterUrl == "N/A")
 				<span class="glyphicon glyphicon-film"></span>
 			#else
-				<img data-imdbid="${movie.imdbId}" src="$movie.posterUrl"/>
+				<img data-imdbid="${movie.imdbId}" src="$movie.httpsPosterUrl"/>
 			#end
 
 			<div class="caption">

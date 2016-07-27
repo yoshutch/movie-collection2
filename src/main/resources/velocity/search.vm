@@ -54,7 +54,7 @@
 				#if($movie.posterUrl == "N/A")
 				<span class="glyphicon glyphicon-film"></span>
 				#else
-				<img data-imdbid="${movie.imdbId}" src="$movie.posterUrl"/>
+				<img data-imdbid="${movie.imdbId}" src="$movie.httpsPosterUrl"/>
 				#end
 
 				<div class="caption">
