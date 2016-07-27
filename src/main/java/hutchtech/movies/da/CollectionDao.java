@@ -95,7 +95,7 @@ public class CollectionDao {
 				.append("imdbId", movie.getImdbId())
 				.append("title", movie.getTitle())
 				.append("poster", movie.getPosterUrl())
-				.append("rating", movie.getRating().name())
+				.append("rating", movie.getRating().getVal())
 				.append("runtime", movie.getRuntime())
 				.append("genres", movie.getGenres())
 				.append("mediums", list);
@@ -106,7 +106,7 @@ public class CollectionDao {
 		movie.setImdbId(document.getString("imdbId"));
 		movie.setTitle(document.getString("title"));
 		movie.setPosterUrl(document.getString("poster"));
-		movie.setRating(Rating.valueOf(document.getString("rating")));
+		movie.setRating(new Rating(document.getString("rating")));
 		movie.setRuntime(document.getString("runtime"));
 		movie.setGenres((List<String>) document.get("genres"));
 		final List<Document> mediumsList = (List<Document>) document.get("mediums");

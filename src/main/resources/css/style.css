@@ -41,3 +41,7 @@
 .right-align {
 	text-align: right;
 }
+
+.padded-left {
+	padding-left: 10px;
+}

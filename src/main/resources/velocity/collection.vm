@@ -4,134 +4,131 @@
 	#parse("util/common-head.vm")
 
 	<script type="text/javascript">
-		var filterGenres = new Array();
-		var filterMediums = new Array();
-
 		$(document).ready(function () {
-			#foreach($genre in $genres)
-				filterGenres.push("$genre");
-				$("#$genre").prop("checked", true);
+			$("#sortBy").val("$sortBy");
+			#foreach($genre in $genreFilters)
+				$("input[name='genreFilter'][value='$genre']").prop("checked", true);
 			#end
-			#foreach($medium in $mediums)
-				filterMediums.push("$medium.val");
-				$("#$medium.val").prop("checked", true);
+			#foreach($medium in $mediumFilters)
+				$("input[name='mediumFilter'][value='$medium.val']").prop("checked", true);
 			#end
-			$("#sortBy").on("change", function(){
+			#foreach($rating in $ratingFilters)
+				$("input[name='ratingFilter'][value='$rating']").prop("checked", true);
+			#end
+			$("#sortBy").on("change", function () {
 				$("#sortForm").submit();
 			});
 			$(".filter-btn").on("click", function () {
-				$("#filter").show();
-			});
-			$(".filterGenre").on("change", function(){
-				var checked = $(this).is(":checked");
-				var v = $(this).attr("value");
-				if (checked) {
-					filterGenres.push(v);
-					filterMovies();
+				var filterVisible = $("#filter").is(":visible");
+				if (filterVisible){
+					$("#filter").hide();
 				} else {
-					var i = filter.indexOf(v);
-					filterGenres.splice(i);
-					filterMovies();
-				}
-			});
-			$(".filterMedium").on("change", function(){
-				var checked = $(this).is(":checked");
-				var v = $(this).attr("value");
-				if (checked) {
-					filterMediums.push(v);
-					filterMovies();
-				} else {
-					var i = filter.indexOf(v);
-					filterMediums.splice(i);
-					filterMovies();
+					$("#filter").show();
 				}
 			});
 		});
-
-		function filterMovies(){
-			$(".movie").each(function(){
-				for (var i = 0; i < filterGenres.length; i++){
-
-				}
-			});
-		}
 	</script>
 </head>
 <body>
 	#parse("util/header.vm")
 <div class="container">
-	<div class="row">
-		<div class="col-md-5">
-			<h3>Collection: $collection.name</h3>
-		</div>
-		<div class="col-md-7">
-
-			<button type="button" class="filter-btn btn btn-default">
-				Genre Filter <span class="badge">$genres.size()</span>
-			</button>
-			<button type="button" class="filter-btn btn btn-default">
-				Medium Filter <span class="badge">$mediums.size()</span>
-			</button>
-
-			<span class="float-right">
-				<form id="sortForm" class="form-inline" action="$WebPath.getCOLLECTION()" method="get">
-					<label for="sortBy">Sort By:</label>
-					<select id="sortBy" name="sortBy" class="form-control">
-						<option value="$Constants.getSORT_BY_TITLE()">Title</option>
-						<option value="$Constants.getSORT_BY_RUNTIME_SHORT()">Runtime (short to long)</option>
-						<option value="$Constants.getSORT_BY_RUNTIME_LONG()">Runtime (long to short)</option>
-						<option value="$Constants.getSORT_BY_RATING()">Rating</option>
-					</select>
-				</form>
-			</span>
-		</div>
-	</div>
-	<div id="filter" class="row" hidden>
-		<label>Filter by Genres:</label>
-		#foreach($genre in $genres)
-			<label for="$genre" class="checkbox-inline">
-				<input id="$genre" class="filterGenre" value="$genre" type="checkbox"/>
-				$genre
-			</label>
-		#end
-		<br/>
-		<label>Filter by Medium:</label>
-		#foreach($medium in $mediums)
-			<label for="$medium" class="checkbox-inline">
-				<input id="$medium" class="filterMedium" value="$medium" type="checkbox"/>
-				$medium.val
-			</label>
-		#end
-	</div>
-	<hr/>
-	<div class="movies">
-		#foreach($movie in $movies)
-			<div class="thumbnail movie #foreach($genre in $movie.genres)$genre#end #foreach($medium in $movie.mediums)$medium.val#end">
-				#if($movie.posterUrl == "N/A")
-					<span class="glyphicon glyphicon-film"></span>
+	<form id="sortForm" class="form-inline" action="$WebPath.getCOLLECTION()" method="get">
+		<div class="row">
+			<div class="col-md-5">
+				<h3>Collection: $collection.name <small>$totalNumOfMovies total movies</small></h3>
+			</div>
+			<div class="col-md-7 right-align">
+				#if($genreFilters.size() == $genres.size()
+				&& $mediumFilters.size() == $mediums.size()
+				&& $ratingFilters.size() == $ratings.size())
+					<button type="button" class="filter-btn btn btn-default">
+						<strong>Filters</strong> -
+						<small>showing all movies</small>
+					</button>
 				#else
-					<img data-imdbid="${movie.imdbId}" src="$movie.posterUrl"/>
+					<button type="button" class="filter-btn btn btn-default">
+						<strong>Filters</strong> -
+						<small>Genres <span class="badge">$genreFilters.size()</span></small>
+						<small>Mediums <span class="badge">$mediumFilters.size()</span></small>
+						<small>Ratings <span class="badge">$ratingFilters.size()</span></small>
+					</button>
 				#end
 
-				<div class="caption">
-					<h3>$movie.title
-						<small>$movie.rating</small>
-					</h3>
-					<p>$movie.runtime</p>
-					<p>
-						#foreach($genre in $movie.genres)
-							<span class="label label-default">$genre</span>
-						#end
-					</p>
-				</div>
-				<div class="center-align">
-					#foreach($medium in $movie.mediums)
-						<button type="button" class="btn btn-default btn-small">$medium.val</button>
-					#end
-				</div>
+				<label for="sortBy" class="padded-left">Sort By:</label>
+				<select id="sortBy" name="sortBy" class="form-control">
+					<option value="$Constants.getSORT_BY_TITLE()">Title</option>
+					<option value="$Constants.getSORT_BY_RUNTIME_SHORT()">Runtime (short to long)</option>
+					<option value="$Constants.getSORT_BY_RUNTIME_LONG()">Runtime (long to short)</option>
+					<option value="$Constants.getSORT_BY_RATING()">Rating</option>
+				</select>
 			</div>
-		#end
-	</div>
+		</div>
+		<div id="filter" class="row" hidden>
+			<div class="col-md-9">
+				<label>Genres:</label>
+				#foreach($genre in $genres)
+					<label for="$genre" class="checkbox-inline">
+						<input id="$genre" class="filterGenre" value="$genre" type="checkbox" name="genreFilter"/>
+						$genre
+					</label>
+				#end
+				<br/>
+				<label>Mediums:</label>
+				#foreach($medium in $mediums)
+					<label for="$medium.val" class="checkbox-inline">
+						<input id="$medium.val" class="filterMedium" value="$medium.val" type="checkbox" name="mediumFilter"/>
+						$medium.val
+					</label>
+				#end
+				<br/>
+				<label>Ratings:</label>
+				#foreach($rating in $ratings)
+					<label for="$rating" class="checkbox-inline">
+						<input id="$rating" class="filterMedium" value="$rating" type="checkbox" name="ratingFilter"/>
+						$rating
+					</label>
+				#end
+			</div>
+			<div class="col-md-3 right-align">
+				<input type="submit" class="btn btn-primary btn-block" value="Filter"/>
+			</div>
+	</form>
+</div>
+<hr/>
+<span class="float-right">Showing $movies.size() movie(s)</span>
+<div class="movies">
+	#foreach($movie in $movies)
+		<div class="thumbnail movie #foreach($genre in $movie.genres)$genre#end #foreach($medium in $movie.mediums)$medium.val#end">
+			#if($movie.posterUrl == "N/A")
+				<span class="glyphicon glyphicon-film"></span>
+			#else
+				<img data-imdbid="${movie.imdbId}" src="$movie.posterUrl"/>
+			#end
+
+			<div class="caption">
+				<h3>$movie.title
+					<small>$movie.rating</small>
+				</h3>
+				<p>$movie.runtime</p>
+				<p class="center-align">
+					#foreach($genre in $movie.genres)
+						<span class="label label-default">$genre</span>
+					#end
+				</p>
+			</div>
+			<div class="center-align">
+				#foreach($medium in $movie.mediums)
+					<button type="button" class="btn btn-default btn-xs">
+						$medium.val
+						#if($medium.note)
+						<span class="badge">i</span>
+						#end
+					</button>
+				#end
+			</div>
+		</div>
+	#end
+</div>
 </div>
 
 </body>

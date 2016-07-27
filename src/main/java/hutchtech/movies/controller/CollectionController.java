@@ -1,10 +1,8 @@
 package hutchtech.movies.controller;
 
 import hutchtech.movies.OimdbClient;
+import hutchtech.movies.domain.*;
 import hutchtech.movies.domain.Collection;
-import hutchtech.movies.domain.Medium;
-import hutchtech.movies.domain.Movie;
-import hutchtech.movies.domain.User;
 import hutchtech.movies.util.Constants;
 import hutchtech.movies.util.Path;
 import hutchtech.movies.util.ViewUtil;
@@ -13,6 +11,7 @@ import spark.Response;
 import spark.Route;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static hutchtech.movies.app.Routes.collectionDao;
 import static hutchtech.movies.app.Routes.userDao;
@@ -45,9 +44,43 @@ public class CollectionController {
 		final Collection collection = collectionDao.getCollectionById(currentUser.getDefaultCollection());
 		model.put("collection", collection);
 
-//		sort movies and add to model
-		final List<Movie> movies = collection.getMovies();
-		final String sortBy = request.queryParams("sortBy");
+//		filter movies
+		List<Movie> movies = collection.getMovies();
+		model.put("totalNumOfMovies", movies.size());
+		Set<String> genres = new TreeSet<>();
+		Set<Medium> mediums = new TreeSet<>();
+		Set<Rating> ratings = new TreeSet<>();
+		for (Movie movie : movies) {
+			genres.addAll(movie.getGenres());
+			mediums.addAll(movie.getMediums());
+			ratings.add(movie.getRating());
+		}
+		model.put("genres", genres); //all genres before filter
+		model.put("mediums", mediums); //all mediums before filter
+		model.put("ratings", ratings); //all ratings before filter
+		final String[] genreFiltersArray = request.queryParamsValues("genreFilter");
+		final String[] mediumFiltersArray = request.queryParamsValues("mediumFilter");
+		final String[] ratingFiltersArray = request.queryParamsValues("ratingFilter");
+		final Set<String> genreFilters = genreFiltersArray == null ? genres : new HashSet<>(Arrays.asList(genreFiltersArray));
+		final Set<Medium> mediumFilters = mediumFiltersArray == null ? mediums : Arrays.stream(mediumFiltersArray).map(Medium::new).collect(Collectors.toSet());
+		final Set<Rating> ratingFilters = ratingFiltersArray == null ? ratings : Arrays.stream(ratingFiltersArray).map(Rating::new).collect(Collectors.toSet());
+
+		model.put("genreFilters", genreFilters);
+		model.put("mediumFilters", mediumFilters);
+		model.put("ratingFilters", ratingFilters);
+
+		movies = movies.stream()
+					.filter(movie -> !Collections.disjoint(movie.getGenres(), genreFilters))
+					.filter(movie -> !Collections.disjoint(
+							movie.getMediums().stream()
+									.map(Medium::getVal).collect(Collectors.toList()
+							), mediumFilters.stream()
+									.map(Medium::getVal).collect(Collectors.toList())))
+					.filter(movie -> ratingFilters.contains(movie.getRating()))
+					.collect(Collectors.toList());
+
+//		sort movies
+		String sortBy = request.queryParams("sortBy");
 		if (Constants.SORT_BY_RUNTIME_SHORT.equals(sortBy)){
 			Collections.sort(movies, new RuntimeComparator(true));
 		} else if (Constants.SORT_BY_RUNTIME_LONG.equals(sortBy)){
@@ -55,17 +88,12 @@ public class CollectionController {
 		} else if (Constants.SORT_BY_RATING.equals(sortBy)){
 			Collections.sort(movies, (m1, m2) -> m1.getRating().compareTo(m2.getRating()));
 		} else {
+			sortBy = Constants.SORT_BY_TITLE;
 			Collections.sort(movies);
 		}
+		model.put("sortBy", sortBy);
 
-		Set<String> genres = new TreeSet<>();
-		Set<Medium> mediums = new TreeSet<>();
-		for (Movie movie : movies) {
-			genres.addAll(movie.getGenres());
-			mediums.addAll(movie.getMediums());
-		}
-		model.put("genres", genres);
-		model.put("mediums", mediums);
+//		add movies to model
 		model.put("movies", movies);
 
 		return ViewUtil.render(request, model, Path.Template.COLLECTION);

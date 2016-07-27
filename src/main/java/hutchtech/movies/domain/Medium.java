@@ -56,4 +56,6 @@ public class Medium implements Comparable<Medium>{
 	public int compareTo(Medium m2) {
 		return this.val.compareTo(m2.getVal());
 	}
+
+
 }
