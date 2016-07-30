@@ -106,16 +106,14 @@
 <div class="movies">
 	#foreach($movie in $movies)
 		<div class="thumbnail movie #foreach($genre in $movie.genres)$genre#end #foreach($medium in $movie.mediums)$medium.val#end">
-			#if($movie.posterUrl == "N/A")
-				<span class="glyphicon glyphicon-film"></span>
-			#else
-				<img data-imdbid="${movie.imdbId}" src="$movie.httpsPosterUrl"/>
-			#end
-
 			<div class="caption">
 				<h3>$movie.title
 					<small>$movie.rating</small>
 				</h3>
+				<a href="$movie.posterUrl" target="_blank" class="center-align">
+					Image
+					<span class="glyphicon glyphicon-film"></span>
+				</a>
 				<p>$movie.runtime</p>
 				<p class="center-align">
 					#foreach($genre in $movie.genres)

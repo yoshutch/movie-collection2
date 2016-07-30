@@ -9,8 +9,8 @@
 				var button = $(event.relatedTarget);
 				var imdbId = button.data("imdbid");
 				console.log(imdbId);
-				var poster = $("img[data-imdbid='" + imdbId + "']").attr("src");
-				$("#dialogPoster").attr("src", poster);
+				var info = $(".movie[data-imdbid='" + imdbId + "'] div.caption").html();
+				$("#dialogInfo").html(info);
 				$("input[name='imdbId']").val(imdbId);
 			});
 
@@ -49,17 +49,19 @@
 <div class="container movies">
 
 	#foreach($movie in $movies)
-		<!--<div class="">-->
-			<div class="thumbnail movie">
-				#if($movie.posterUrl == "N/A")
-				<span class="glyphicon glyphicon-film"></span>
-				#else
-				<img data-imdbid="${movie.imdbId}" src="$movie.httpsPosterUrl"/>
-				#end
-
+			<div class="thumbnail movie" data-imdbid="$movie.imdbId">
 				<div class="caption">
 					<h3>$movie.title <small>$movie.rating</small></h3>
-
+					<a href="$movie.posterUrl" target="_blank" class="center-align">
+						Image
+						<span class="glyphicon glyphicon-film"></span>
+					</a>
+					<p>$movie.runtime</p>
+					<p class="center-align">
+						#foreach($genre in $movie.genres)
+						<span class="label label-default">$genre</span>
+						#end
+					</p>
 				</div>
 				<div>
 					<button type="button" class="btn btn-primary btn-block"
@@ -67,7 +69,6 @@
 							data-imdbid="${movie.imdbId}">Add to Collection</button>
 				</div>
 			</div>
-		<!--</div>-->
 	#end
 	<div id="movieModal" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog">
@@ -80,7 +81,7 @@
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-5">
-								<img id="dialogPoster" src=""/>
+								<div id="dialogInfo"></div>
 							</div>
 							<div class="col-md-7">
 								<button id="dvdBtn" type="button" class="own-btn btn btn-default btn-block" data-medium="dvd">DVD</button>
