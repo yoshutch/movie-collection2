@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Created by yoshutch on 7/24/16.
+ *
  */
 public class Medium implements Comparable<Medium>{
 	public static final Medium DVD = new Medium("DVD");
@@ -27,7 +28,7 @@ public class Medium implements Comparable<Medium>{
 		this.note = note;
 	}
 
-	@JsonValue
+//	@JsonValue
 	public String getVal() {
 		return val;
 	}

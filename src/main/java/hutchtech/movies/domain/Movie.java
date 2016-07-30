@@ -1,12 +1,14 @@
 package hutchtech.movies.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import hutchtech.movies.util.JsonMapper;
 
 import java.util.List;
 
 /**
  * Created by Scott Hutchings on 7/21/2016.
+ *
  */
 public class Movie implements Comparable<Movie> {
 	@JsonProperty("imdbID")
@@ -21,7 +23,7 @@ public class Movie implements Comparable<Movie> {
 	private String posterUrl;
 	@JsonProperty("Genre")
 	private List<String> genres;
-	@JsonIgnore
+	@JsonProperty("Mediums")
 	private List<Medium> mediums;
 
 	public String getImdbId() {
@@ -116,5 +118,9 @@ public class Movie implements Comparable<Movie> {
 	@Override
 	public int compareTo(Movie m2) {
 		return this.title.compareTo(m2.getTitle());
+	}
+
+	public String toJson() throws JsonProcessingException {
+		return JsonMapper.mapper().writeValueAsString(this);
 	}
 }

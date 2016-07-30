@@ -8,7 +8,6 @@
 			$("#movieModal").on("shown.bs.modal", function(event){
 				var button = $(event.relatedTarget);
 				var imdbId = button.data("imdbid");
-				console.log(imdbId);
 				var info = $(".movie[data-imdbid='" + imdbId + "'] div.caption").html();
 				$("#dialogInfo").html(info);
 				$("input[name='imdbId']").val(imdbId);
@@ -34,7 +33,6 @@
 					url: url,
 					data: data
 				}).done(function(result){
-					console.log(result);
 					if (JSON.parse(result).Success == "true"){
 						$("#movieModal").modal("hide");
 						$("#successModal").modal("show");

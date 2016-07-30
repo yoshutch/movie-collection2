@@ -5,6 +5,10 @@
 
 	<script type="text/javascript">
 		$(document).ready(function () {
+			var movies = new Array();
+			#foreach($movie in $movies)
+				movies['$movie.imdbId'] = $movie.toJson();
+			#end
 			$("#sortBy").val("$sortBy");
 			#foreach($genre in $genreFilters)
 				$("input[name='genreFilter'][value='$genre']").prop("checked", true);
@@ -30,11 +34,58 @@
 			$("#reset").on("click", function(){
 				$("input[type='checkbox']").prop("checked", true);
 			});
+
+			$("#movieModal").on("show.bs.modal", function(event){
+				var button = $(event.relatedTarget);
+				var imdbId = button.data("imdbid");
+				$("input[name='imdbId']").val(imdbId);
+				var info = $(".movie[data-imdbid='" + imdbId + "'] div.caption").html();
+				$("#dialogInfo").html(info);
+				$(".modal-title").html(movies[imdbId].Title);
+				$.each(movies[imdbId].Mediums, function(i , medium){
+					$("button.own-btn[data-medium-val='" + medium.val + "']").addClass("btn-info");
+					$("input.hidden-input[data-medium-val='" + medium.val + "']").val("Y");
+					$("input.note[data-medium-val='" + medium.val + "']").val(medium.note);
+				});
+				$("input[name='imdbId']").val(imdbId);
+			});
+			$("#movieModal").on("hidden.bs.modal", function(){
+				$("input.hidden-input").val("");
+				$("input.note").val("");
+				$("input[name='imdbId']").val("");
+				$("button.own-btn").removeClass("btn-info");
+			});
+
+			$(".own-btn").on("click", function(){
+				var medium = $(this).data("medium");
+				var alreadyOwn = $("input[name='" + medium + "']").val();
+				if (alreadyOwn == "Y"){
+					$("input[name='" + medium + "']").val("");
+					$(this).removeClass("btn-info");
+				} else {
+					$("input[name='" + medium + "']").val("Y");
+					$(this).addClass("btn-info");
+				}
+			});
+
+			$("#saveBtn").on("click", function(){
+				var url = $("#addMovieForm").attr("action");
+				var data = $("#addMovieForm").serialize();
+				$.ajax({
+					method: "POST",
+					url: url,
+					data: data
+				}).done(function(result){
+					if (JSON.parse(result).Success == "true"){
+						location.reload();
+					}
+				});
+			});
 		});
 	</script>
 </head>
 <body>
-	#parse("util/header.vm")
+#parse("util/header.vm")
 <div class="container">
 	<form id="sortForm" class="form-inline" action="$WebPath.getCOLLECTION()" method="get">
 		<div class="row">
@@ -97,44 +148,112 @@
 				<button id="reset" type="button" class="btn btn-default btn-xs">reset filters</button>
 				<input type="submit" class="btn btn-primary btn-block" value="Filter"/>
 			</div>
-	</form>
-</div>
-<div class="midline">
-	<div class="line"></div>
-	<div class="line-label">Showing $movies.size() movie#if($movies.size() == 0 || $movies.size() > 1)s#end</div>
-</div>
-<div class="movies">
-	#foreach($movie in $movies)
-		<div class="thumbnail movie #foreach($genre in $movie.genres)$genre#end #foreach($medium in $movie.mediums)$medium.val#end">
-			<div class="caption">
-				<h3>$movie.title
-					<small>$movie.rating</small>
-				</h3>
-				<a href="$movie.posterUrl" target="_blank" class="center-align">
-					Image
-					<span class="glyphicon glyphicon-film"></span>
-				</a>
-				<p>$movie.runtime</p>
-				<p class="center-align">
-					#foreach($genre in $movie.genres)
-						<span class="label label-default">$genre</span>
-					#end
-				</p>
-			</div>
-			<div class="center-align">
-				#foreach($medium in $movie.mediums)
-					<button type="button" class="btn btn-default btn-xs">
-						$medium.val
-						#if($medium.note)
-						<span class="badge">i</span>
-						#end
-					</button>
-				#end
-			</div>
 		</div>
-	#end
+	</form>
+	<div class="midline">
+		<div class="line"></div>
+		<div class="line-label">Showing $movies.size() movie#if($movies.size() == 0 || $movies.size() > 1)s#end</div>
+	</div>
+	<div class="movies">
+		#foreach($movie in $movies)
+			<div class="thumbnail movie #foreach($genre in $movie.genres)$genre#end #foreach($medium in $movie.mediums)$medium.val#end"
+				 data-imdbid="$movie.imdbId">
+				<div class="caption">
+					<h3>$movie.title
+						<small>$movie.rating</small>
+					</h3>
+					<a href="$movie.posterUrl" target="_blank" class="center-align">
+						Image
+						<span class="glyphicon glyphicon-film"></span>
+					</a>
+					<p>$movie.runtime</p>
+					<p class="center-align">
+						#foreach($genre in $movie.genres)
+							<span class="label label-default">$genre</span>
+						#end
+					</p>
+				</div>
+				<div class="center-align">
+					#foreach($medium in $movie.mediums)
+						<button type="button" class="btn btn-default btn-xs"
+								data-toggle="modal" data-target="#movieModal"
+								data-imdbid="${movie.imdbId}">
+							$medium.val
+							#if($medium.note)
+							<span class="badge">i</span>
+							#end
+						</button>
+					#end
+				</div>
+			</div>
+		#end
+	</div>
 </div>
-</div>
+<div id="movieModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="addMovieForm" action="$WebPath.getADD_MOVIE()" method="post" class="form-inline">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">My Movie</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-5">
+							<div id="dialogInfo"></div>
+						</div>
+						<div class="col-md-7">
+							<button id="dvdBtn" type="button" class="own-btn btn btn-default btn-block"
+									data-medium="dvd" data-medium-val="DVD">DVD</button>
+							<button id="bluRayBtn" type="button" class="own-btn btn btn-default btn-block"
+									data-medium="bluRay" data-medium-val="Blu-ray">Blu-ray</button>
+							<button id="vhsBtn" type="button" class="own-btn btn btn-default btn-block"
+									data-medium="vhs" data-medium-val="VHS">VHS</button>
+							<hr/>
+							<div class="form-group">
+								<input id="amazonText" type="text" name="amazonText" class="note form-control"
+									   placeholder="Amazon Instant Video URL" data-medium-val="Amazon">
+								<button id="amazonBtn" type="button" class="own-btn btn btn-default"
+										data-medium="amazon" data-medium-val="Amazon">Amazon</button>
+							</div>
+							<div class="form-group">
+								<input id="uvText" type="text" name="ultravioletText" class="note form-control"
+									   placeholder="UltraViolet video URL" data-medium-val="UltraViolet">
+								<button id="uvBtn" type="button" class="own-btn btn btn-default"
+										data-medium="ultraviolet" data-medium-val="UltraViolet">UltraViolet</button>
+							</div>
+							<div class="form-group">
+								<input id="playText" type="text" name="playText" class="note form-control"
+									   placeholder="Google Play video URL" data-medium-val="Google Play">
+								<button id="playBtn" type="button" class="own-btn btn btn-default"
+										data-medium="play" data-medium-val="Google Play">Google Play</button>
+							</div>
+							<div class="form-group">
+								<input id="digitalText" type="text" name="digitalText" class="note form-control"
+									   placeholder="video URL" data-medium-val="Digital">
+								<button id="digitalBtn" type="button" class="own-btn btn btn-default"
+										data-medium="digital" data-medium-val="Digital">Other Digital</button>
+							</div>
+							<input type="hidden" name="imdbId"/>
+							<input type="hidden" name="collectionId" value="$collection.id"/>
+							<input type="hidden" name="dvd" class="hidden-input" data-medium-val="DVD"/>
+							<input type="hidden" name="bluRay" class="hidden-input" data-medium-val="Blu-Ray"/>
+							<input type="hidden" name="vhs" class="hidden-input" data-medium-val="VHS"/>
+							<input type="hidden" name="amazon" class="hidden-input" data-medium-val="Amazon"/>
+							<input type="hidden" name="ultraviolet" class="hidden-input" data-medium-val="UltraViolet"/>
+							<input type="hidden" name="play" class="hidden-input" data-medium-val="Google Play"/>
+							<input type="hidden" name="digital" class="hidden-input" data-medium-val="Digital"/>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="float-left btn btn-default" data-dismiss="modal">Close</button>
 
+					<button id="saveBtn" type="button" class="btn btn-primary">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 </body>
 </html>
