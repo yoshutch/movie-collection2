@@ -145,5 +145,6 @@
 		</div>
 	</div>
 </div>
+#parse("util/footer.vm")
 </body>
 </html>

@@ -1,0 +1,6 @@
+<footer class="navbar navbar-default navbar-fixed-bottom">
+	<div class="container">
+		<p class="navbar-text text-muted">Movie Collections</p>
+		<p class="navbar-text navbar-right"><a href="mailto:yoshutch@gmail.com" class="navbar-link">Contact Us</a></p>
+	</div>
+</footer>

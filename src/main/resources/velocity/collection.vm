@@ -41,7 +41,7 @@
 				$("input[name='imdbId']").val(imdbId);
 				var info = $(".movie[data-imdbid='" + imdbId + "'] div.caption").html();
 				$("#dialogInfo").html(info);
-				$(".modal-title").html(movies[imdbId].Title);
+				$("#modalTitle").html(movies[imdbId].Title);
 				$.each(movies[imdbId].Mediums, function(i , medium){
 					$("button.own-btn[data-medium-val='" + medium.val + "']").addClass("btn-info");
 					$("input.hidden-input[data-medium-val='" + medium.val + "']").val("Y");
@@ -81,6 +81,16 @@
 					}
 				});
 			});
+
+			$(".randomBtn").on("click", function(){
+				var keys = Object.keys(movies);
+				var randomKey = keys[Math.floor(Math.random()*keys.length)];
+				var randomMovie = movies[randomKey];
+				var info = $(".movie[data-imdbid='" + randomKey + "'] div.caption").html();
+				$("#dialogInfo2").html(info);
+
+				$("#movieModalSmall").modal("show");
+			});
 		});
 	</script>
 </head>
@@ -89,19 +99,20 @@
 <div class="container">
 	<form id="sortForm" class="form-inline" action="$WebPath.getCOLLECTION()" method="get">
 		<div class="row">
-			<div class="col-md-5">
-				<h3>Collection: $collection.name <small>$totalNumOfMovies total movies</small></h3>
+			<div class="col-md-4">
+				<h3>$collection.name <small>$totalNumOfMovies total movies</small></h3>
 			</div>
-			<div class="col-md-7 right-align">
+			<div class="col-md-8 right-align padded-top">
+				<button type="button" class="randomBtn btn btn-primary">Random Movie</button>
 				#if($genreFilters.size() == $genres.size()
 				&& $mediumFilters.size() == $mediums.size()
 				&& $ratingFilters.size() == $ratings.size())
-					<button type="button" class="filter-btn btn btn-default">
+					<button type="button" class="filter-btn btn btn-default margin-left">
 						<strong>Filters</strong> -
 						<small>showing all movies</small>
 					</button>
 				#else
-					<button type="button" class="filter-btn btn btn-default">
+					<button type="button" class="filter-btn btn btn-default margin-left">
 						<strong>Filters</strong> -
 						<small>Genres <span class="badge">$genreFilters.size()</span></small>
 						<small>Mediums <span class="badge">$mediumFilters.size()</span></small>
@@ -179,7 +190,7 @@
 								data-toggle="modal" data-target="#movieModal"
 								data-imdbid="${movie.imdbId}">
 							$medium.val
-							#if($medium.note)
+							#if($medium.note && $medium.note != '')
 							<span class="badge">i</span>
 							#end
 						</button>
@@ -189,13 +200,14 @@
 		#end
 	</div>
 </div>
+#parse("util/footer.vm")
 <div id="movieModal" class="modal fade" tabindex="-1" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form id="addMovieForm" action="$WebPath.getADD_MOVIE()" method="post" class="form-inline">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">My Movie</h4>
+					<h4 id="modalTitle" class="modal-title">My Movie</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -252,6 +264,25 @@
 					<button id="saveBtn" type="button" class="btn btn-primary">Save</button>
 				</div>
 			</form>
+		</div>
+	</div>
+</div>
+<div id="movieModalSmall" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Random Movie</h4>
+			</div>
+			<div class="modal-body">
+				<div id="dialogInfo2"></div>
+				<div id="mediums"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="float-left btn btn-default" data-dismiss="modal">Close</button>
+
+				<button type="button" class="randomBtn btn btn-primary">Another Random Movie</button>
+			</div>
 		</div>
 	</div>
 </div>

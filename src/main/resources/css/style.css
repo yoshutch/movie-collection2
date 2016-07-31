@@ -1,3 +1,6 @@
+body {
+	padding-bottom: 70px;
+}
 
 .movies {
 	display: flex;
@@ -42,8 +45,16 @@
 	text-align: right;
 }
 
+.padded-top {
+	padding-top: 10px;
+}
+
 .padded-left {
 	padding-left: 10px;
+}
+
+.margin-left {
+	margin-left: 20px;
 }
 
 .midline{
