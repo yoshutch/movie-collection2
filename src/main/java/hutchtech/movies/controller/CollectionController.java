@@ -36,8 +36,11 @@ public class CollectionController {
 			collectionDao.saveCollection(coll);
 
 //			set user's default collection
+			User updateUser = new User();
+			updateUser.setId(currentUser.getId());
+			updateUser.setDefaultCollection(coll.getId());
+			userDao.update(updateUser);
 			currentUser.setDefaultCollection(coll.getId());
-			userDao.update(currentUser);
 		}
 
 //		add default collection to model

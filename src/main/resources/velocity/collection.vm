@@ -249,7 +249,7 @@
 							<input type="hidden" name="imdbId"/>
 							<input type="hidden" name="collectionId" value="$collection.id"/>
 							<input type="hidden" name="dvd" class="hidden-input" data-medium-val="DVD"/>
-							<input type="hidden" name="bluRay" class="hidden-input" data-medium-val="Blu-Ray"/>
+							<input type="hidden" name="bluRay" class="hidden-input" data-medium-val="Blu-ray"/>
 							<input type="hidden" name="vhs" class="hidden-input" data-medium-val="VHS"/>
 							<input type="hidden" name="amazon" class="hidden-input" data-medium-val="Amazon"/>
 							<input type="hidden" name="ultraviolet" class="hidden-input" data-medium-val="UltraViolet"/>

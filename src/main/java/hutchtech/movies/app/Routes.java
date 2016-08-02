@@ -37,13 +37,7 @@ public class Routes {
 		port(getHerokuAssignedPort());
 		staticFileLocation("/css");
 
-		get(Path.Web.INDEX, (req, res) -> {
-//			final Movie m = OimdbClient.findMovieByImdbId("tt0088763");
-//			LOG.debug(m);
-			final List<Movie> movies = OimdbClient.findMoviesByTitle("Star Wars");
-			LOG.debug(movies);
-			return ViewUtil.render(req, new HashMap<>(), Path.Template.INDEX);
-		});
+		get(Path.Web.INDEX, (req, res) -> ViewUtil.render(req, new HashMap<>(), Path.Template.INDEX));
 		get(Path.Web.LOGIN, LoginController.serveLoginPage);
 		post(Path.Web.LOGIN, LoginController.handleLoginPost);
 		post(Path.Web.LOGOUT, LoginController.handleLogoutPost);

@@ -76,8 +76,10 @@ public class CollectionDao {
 		collection.setUsers((List<String>) document.get("users"));
 		final ArrayList<Document> movieDocumentArray = (ArrayList<Document>) document.get("movies");
 		List<Movie> movies = new ArrayList<>();
-		for (Document document1 : movieDocumentArray) {
-			movies.add(mapDocumentToMovie(document1));
+		if (movieDocumentArray != null) {
+			for (Document document1 : movieDocumentArray) {
+				movies.add(mapDocumentToMovie(document1));
+			}
 		}
 		collection.setMovies(movies);
 		return collection;

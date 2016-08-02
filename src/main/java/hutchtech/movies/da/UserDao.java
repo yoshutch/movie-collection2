@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters;
 import hutchtech.movies.domain.User;
 import org.apache.log4j.Logger;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,9 +47,25 @@ public class UserDao {
 	}
 
 	public void update(User user){
+		BasicDBObject updateQuery = new BasicDBObject();
+		if (user.getUsername() != null){
+			updateQuery.append("username", user.getUsername());
+		}
+		if (user.getName() != null){
+			updateQuery.append("name", user.getName());
+		}
+		if (user.getSalt() != null){
+			updateQuery.append("salt", user.getSalt());
+		}
+		if (user.getHashedPassword() != null){
+			updateQuery.append("hashedPassword", user.getHashedPassword());
+		}
+		if (user.getDefaultCollection() != null){
+			updateQuery.append("defaultCollection", user.getDefaultCollection());
+		}
 		database.getCollection("Users").updateOne(
-				new Document().append("_id", user.getId()),
-				mapUserToDocument(user)
+				Filters.eq("_id", new ObjectId(user.getId())),
+				new BasicDBObject().append("$set", updateQuery)
 		);
 	}
 
