@@ -35,7 +35,7 @@ public class Routes {
 		collectionDao = new CollectionDao(db);
 
 		port(getHerokuAssignedPort());
-		staticFileLocation("/css");
+		staticFileLocation("/public");
 
 		get(Path.Web.INDEX, (req, res) -> ViewUtil.render(req, new HashMap<>(), Path.Template.INDEX));
 		get(Path.Web.LOGIN, LoginController.serveLoginPage);
